@@ -1,0 +1,10 @@
+THE AVOIDER - Mouse version
+
+-You are a red rectangle with 3 lives
+-You have to avoid balls that are bouncing across the screen (you use mouse, not keyboard)
+-You have to move or you'll die
+-All ball values are random (spawning x, spawning y, moving angle, speed, color)
+-Spawning ratio of balls is greater than in keyboard version 
+
+
+HAVE FUN! :)
