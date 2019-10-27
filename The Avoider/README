@@ -1,0 +1,9 @@
+THE AVOIDER
+
+-You are a red rectangle with 3 lives
+-You have to avoid balls that are bouncing across the screen
+-You have to move or you'll die
+-All ball values are random (spawning x, spawning y, moving angle, speed, color)
+
+
+HAVE FUN! :)
