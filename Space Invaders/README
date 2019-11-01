@@ -2,8 +2,10 @@
 SPACE INVADERS
 
 -Written only using Java Graphics component
--Shot all the ships to get to next level
+-Shoot all the ships to get to next level
 -Each level is harder than previous one
--Shot alien ship to get powerups like life, penetrating missile or quickshooter
+-Shoot alien ship to get powerups like life, penetrating missile or quickshooter
 -Avoid enemy missiles
 -Have fun
+
+-Game is much more dynamic than screenshot shows it :P
