@@ -1,0 +1,9 @@
+
+SPACE INVADERS
+
+-Written only using Java Graphics component
+-Shot all the ships to get to next level
+-Each level is harder than previous one
+-Shot alien ship to get powerups like life, penetrating missile or quickshooter
+-Avoid enemy missiles
+-Have fun
