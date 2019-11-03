@@ -1,0 +1,8 @@
+Simple Brick Breaker game
+
+-Press space to launch the ball
+-Press r to reset the ball
+-Break bricks
+
+
+@TODO: Adjust collision system (ball to brick), add game reseting after finish
