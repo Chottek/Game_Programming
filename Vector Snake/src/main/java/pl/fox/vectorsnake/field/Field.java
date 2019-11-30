@@ -1,19 +1,27 @@
 package pl.fox.vectorsnake.field;
 
-import pl.fox.vectorsnake.Game;
+import pl.fox.vectorsnake.Handler;
 import pl.fox.vectorsnake.Launcher;
+import pl.fox.vectorsnake.graphics.FoodLocation;
+import pl.fox.vectorsnake.graphics.Text;
 
 import java.awt.*;
 
 
 public class Field {
 
+    private Handler handler;
+
+    public Field(Handler handler){
+        this.handler = handler;
+    }
+
     private final int RAND_POS_X = 70;
     private final int RAND_POS_Y = 40;
     private final int MODULE_SIZE = 10;
 
-    private int food_x;
-    private int food_y;
+    private int food_x = -10;
+    private int food_y = -10;
     private int bon;
 
 
@@ -24,20 +32,21 @@ public class Field {
     public void render(Graphics g) {
         g.setFont(new Font("Arial", Font.BOLD, 30));
         g.setColor(Color.YELLOW);
-        if (!Game.isStarted)
-            g.drawString("Press space to start!", Launcher.width / 4, Launcher.height / 2);
+        if (!handler.getGame().getGameState().isStarted() &&  handler.getGame().getTicks() / 24 % 2 == 0)
+            Text.drawString(g, "Press SPACE to start!", Launcher.width / 2, Launcher.height / 4,
+                true, Color.RED, new Font("Arial", Font.PLAIN, 30));
 
 
-        g.setColor(Color.GREEN);
-        g.drawRect(0, 0, Launcher.width - 1, Launcher.height - 1);
+            g.setColor(Color.GREEN);
+             g.drawRect(0, 0, Launcher.width - 1, Launcher.height - 1);
 
-        if (bon == 1) {
+        if (bon == 1)
             g.setColor(Color.RED);
-            g.fillRect(food_x, food_y, MODULE_SIZE, MODULE_SIZE);
-        } else {
+         else
             g.setColor(Color.YELLOW);
-            g.fillRect(food_x, food_y, MODULE_SIZE, MODULE_SIZE);
-        }
+
+         g.fillOval(food_x, food_y, MODULE_SIZE, MODULE_SIZE);
+
     }
 
     public void locateFood() {
@@ -48,26 +57,37 @@ public class Field {
 
         rand = (int) (Math.random() * RAND_POS_Y);
         food_y = ((rand * MODULE_SIZE));
+
+        for(int i = 0; i < handler.getGame().getGameState().getPlayer().getModuleX().size(); i++)
+            if(getFoodBounds().intersects(handler.getGame().getGameState().getPlayer().getModuleCollisionBounds(i)) ||
+                    getFoodBounds().intersects(handler.getGame().getGameState().getPlayer().getScoreBounds())){
+                locateFood();
+                break;
+            }
+
+        FoodLocation.add(food_x + MODULE_SIZE / 2, food_y + MODULE_SIZE / 2);
     }
 
     private void checkFood() {
-        if (Player.moduleX.get(0) >= food_x - 5 && Player.moduleX.get(0) <= food_x + MODULE_SIZE + 5 &&
-                Player.moduleY.get(0) >= food_y - 5 && Player.moduleY.get(0) <= food_y + MODULE_SIZE + 5) {
+            if(handler.getGame().getGameState().getPlayer().getHeadCollisionBounds().intersects(getFoodBounds())){
 
-            if (bon == 1)
-                Player.score += 100;
-            else
-                Player.score += 50;
+                if (bon == 1)
+                    handler.getGame().getGameState().getPlayer().addScore(100);
+                else
+                    handler.getGame().getGameState().getPlayer().addScore(50);
 
             locateFood();
 
-
             for (int i = 0; i < 3; i++) {
-                Player.moduleX.add(-20);
-                Player.moduleY.add(-20);
-                Player.snakeLenght++;
+                handler.getGame().getGameState().getPlayer().getModuleX().add(-20f);
+                handler.getGame().getGameState().getPlayer().getModuleY().add(-20f);
+                handler.getGame().getGameState().getPlayer().addSnakeLength(1);
             }
         }
+    }
+
+    private Rectangle getFoodBounds(){
+        return new Rectangle(food_x, food_y, MODULE_SIZE, MODULE_SIZE);
     }
 
 }

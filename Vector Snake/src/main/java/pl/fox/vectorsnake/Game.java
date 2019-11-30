@@ -1,12 +1,9 @@
 package pl.fox.vectorsnake;
 
 import pl.fox.vectorsnake.display.Display;
-import pl.fox.vectorsnake.field.Field;
-import pl.fox.vectorsnake.field.Player;
 import pl.fox.vectorsnake.input.KeyManager;
 
 import java.awt.*;
-import java.awt.event.KeyEvent;
 import java.awt.image.BufferStrategy;
 
 public class Game implements Runnable {
@@ -16,27 +13,24 @@ public class Game implements Runnable {
     public static Thread thread;
     private BufferStrategy bs;
     private Graphics g;
+    private Handler handler;
+    private GameState gameState;
 
-    private Player player;
-    private Field field;
 
     private String title;
     private int width, height;
     private boolean isRunning = false;
-    public static int ticks;
-    public static boolean isStarted = false;
+    private int ticks;
 
 
     public Game(String title, int width, int height) {
         this.title = title;
         this.width = width;
         this.height = height;
-        player = new Player();
-        field = new Field();
-        keyManager = new KeyManager();
 
-        field.locateFood();
-        player.init();
+        handler = new Handler(this);
+        keyManager = new KeyManager();
+        gameState = new GameState(handler);
     }
 
     private void init() {
@@ -45,34 +39,10 @@ public class Game implements Runnable {
         display.getCanvas().addKeyListener(keyManager);
     }
 
-    private void checkIfStarted() {
-        if (KeyManager.keyJustPressed(KeyEvent.VK_SPACE))
-            isStarted = true;
-    }
-
-    private void checkDeathChoice() {
-        if (Player.isDead) {
-            if (KeyManager.keyJustPressed(KeyEvent.VK_SPACE)) {
-                player.init();
-                field.locateFood();
-            } else if (KeyManager.keyJustPressed(KeyEvent.VK_ESCAPE))
-                System.exit(0);
-        }
-    }
 
     private void update() {
         keyManager.update();
-
-        if (!isStarted)
-            checkIfStarted();
-
-        else if (Player.isDead)
-            checkDeathChoice();
-
-        else {
-            field.update();
-            player.update();
-        }
+        gameState.update();
 
     }
 
@@ -86,14 +56,7 @@ public class Game implements Runnable {
 
         g.clearRect(0, 0, width, height);
 
-        if (!Player.isDead) {
-            field.render(g);
-            player.render(g);
-        } else {
-            g.setFont(new Font("Arial", Font.BOLD, 30));
-            g.setColor(Color.RED);
-            g.drawString("Press SPACE to retry or ESC to exit", Launcher.width / 5, Launcher.height / 2);
-        }
+        gameState.render(g);
 
         bs.show();
         g.dispose();
@@ -144,6 +107,16 @@ public class Game implements Runnable {
             } catch (Exception fox) {
                 fox.printStackTrace();
             }
+    }
+
+    public KeyManager getKeyManager(){
+        return keyManager;
+    }
+
+    public GameState getGameState(){ return gameState;}
+
+    public int getTicks(){
+        return ticks;
     }
 
 
