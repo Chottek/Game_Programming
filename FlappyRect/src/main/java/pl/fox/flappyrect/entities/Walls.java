@@ -1,5 +1,6 @@
 package pl.fox.flappyrect.entities;
 
+import pl.fox.flappyrect.Handler;
 import pl.fox.flappyrect.Launcher;
 
 import java.awt.*;
@@ -7,6 +8,8 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class Walls {
+
+    private Handler handler;
 
     private ArrayList<Integer> x;
     private ArrayList<Integer> upLength;
@@ -16,17 +19,18 @@ public class Walls {
     private Rectangle playerCollisionBounds;
     private ArrayList<Boolean> isPointed;
 
-    public Walls() {
+    public Walls(Handler handler) {
+        this.handler = handler;
         init();
     }
 
-    public void init(){
+    public void init() {
         x = new ArrayList<>();
         upLength = new ArrayList<>();
         downLength = new ArrayList<>();
         collisionBoundsUp = new ArrayList<>();
         collisionBoundsDown = new ArrayList<>();
-        playerCollisionBounds = new Rectangle((int) Player.x, (int) Player.y, 30, 20);
+        playerCollisionBounds = new Rectangle((int) handler.getPlayer().getX(), (int) handler.getPlayer().getY(), 30, 20);
         isPointed = new ArrayList<>();
     }
 
@@ -68,13 +72,13 @@ public class Walls {
     }
 
     private void checkCollision() {
-        playerCollisionBounds = new Rectangle((int) Player.x, (int) Player.y, 30, 20);
+        playerCollisionBounds = new Rectangle((int) handler.getPlayer().getX(), (int) handler.getPlayer().getY(), 30, 20);
         for (int i = 0; i < x.size(); i++) {
             if (playerCollisionBounds.intersects(collisionBoundsUp.get(i)) || playerCollisionBounds.intersects(collisionBoundsDown.get(i))) {
-                Player.isDead = true;
-            } else if (Player.x > x.get(i) && !isPointed.get(i)) {
+                handler.getPlayer().setDead(true);
+            } else if (handler.getPlayer().getX() > x.get(i) && !isPointed.get(i)) {
                 isPointed.set(i, true);
-                Player.score++;
+                handler.getPlayer().addScore(1);
             }
         }
     }
@@ -87,7 +91,7 @@ public class Walls {
 
     public void render(Graphics g) {
         for (int i = 0; i < x.size(); i++) {
-            if(!isPointed.get(i))
+            if (!isPointed.get(i))
                 g.setColor(Color.RED);
             else
                 g.setColor(Color.GREEN);

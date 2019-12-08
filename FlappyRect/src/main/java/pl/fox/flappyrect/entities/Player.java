@@ -7,11 +7,11 @@ import java.awt.*;
 
 public class Player {
 
-    public static float x, y;
+    private float x, y;
     private boolean isJumping;
     private double fallSpeed, jumpSpeed;
-    public static int score;
-    public static boolean isDead;
+    private int score;
+    private boolean isDead;
 
     public Player(){
        init();
@@ -59,7 +59,7 @@ public class Player {
     }
 
     private void checkDeath(){
-        if(Player.y > Launcher.height)
+        if(y > Launcher.height)
             isDead = true;
     }
 
@@ -77,5 +77,37 @@ public class Player {
         g.setColor(Color.GREEN);
         g.setFont(new Font("Arial", Font.ITALIC, 14));
         g.drawString("Score: "+ score, 15, 15);
+    }
+
+    public float getX() {
+        return x;
+    }
+
+    public void setX(float x) {
+        this.x = x;
+    }
+
+    public float getY() {
+        return y;
+    }
+
+    public void setY(float y) {
+        this.y = y;
+    }
+
+    public int getScore() {
+        return score;
+    }
+
+    public void addScore(int score) {
+        this.score += score;
+    }
+
+    public boolean isDead() {
+        return isDead;
+    }
+
+    public void setDead(boolean dead) {
+        isDead = dead;
     }
 }
