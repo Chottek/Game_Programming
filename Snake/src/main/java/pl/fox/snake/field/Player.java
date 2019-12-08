@@ -12,15 +12,15 @@ public class Player {
     private final int B_HEIGHT = 400;
     private final int MODULE_SIZE = 10;
     private final int ALL_MODULES = B_WIDTH*B_HEIGHT;
-    public static int[] snakex;
-    public static int[] snakey;
+    private int[] snakex;
+    private int[] snakey;
 
-    public static int snakeLenght;
-    public static boolean isDead;
+    private int snakeLenght;
+    private boolean isDead;
 
-    public static boolean isUp, isDown, isLeft, isRight;
+    private boolean isUp, isDown, isLeft, isRight;
 
-    public static int score;
+    private int score;
 
 
     public void init(){
@@ -117,13 +117,85 @@ public class Player {
         g.setColor(Color.RED);
         for(int i = 0; i < snakeLenght; i++) {
             if(i == 0)
-                g.fillOval(snakex[i], snakey[i], MODULE_SIZE, MODULE_SIZE);
+                g.fillRoundRect(snakex[i], snakey[i], MODULE_SIZE, MODULE_SIZE, 5, 5);
 
             else{
                 g.setColor(Color.GREEN);
-                g.drawOval(snakex[i], snakey[i], MODULE_SIZE, MODULE_SIZE);
+                g.drawRect(snakex[i], snakey[i], MODULE_SIZE, MODULE_SIZE);
             }
 
         }
+    }
+
+    public int[] getSnakex() {
+        return snakex;
+    }
+
+    public void setSnakex(int[] snakex) {
+        this.snakex = snakex;
+    }
+
+    public int[] getSnakey() {
+        return snakey;
+    }
+
+    public void setSnakey(int[] snakey) {
+        this.snakey = snakey;
+    }
+
+    public int getSnakeLenght() {
+        return snakeLenght;
+    }
+
+    public void setSnakeLenght(int snakeLenght) {
+        this.snakeLenght = snakeLenght;
+    }
+
+    public boolean isDead() {
+        return isDead;
+    }
+
+    public void setDead(boolean dead) {
+        isDead = dead;
+    }
+
+    public boolean isUp() {
+        return isUp;
+    }
+
+    public void setUp(boolean up) {
+        isUp = up;
+    }
+
+    public boolean isDown() {
+        return isDown;
+    }
+
+    public void setDown(boolean down) {
+        isDown = down;
+    }
+
+    public boolean isLeft() {
+        return isLeft;
+    }
+
+    public void setLeft(boolean left) {
+        isLeft = left;
+    }
+
+    public boolean isRight() {
+        return isRight;
+    }
+
+    public void setRight(boolean right) {
+        isRight = right;
+    }
+
+    public int getScore() {
+        return score;
+    }
+
+    public void setScore(int score) {
+        this.score = score;
     }
 }

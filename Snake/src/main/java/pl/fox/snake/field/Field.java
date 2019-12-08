@@ -1,12 +1,15 @@
 package pl.fox.snake.field;
 
 import pl.fox.snake.Game;
+import pl.fox.snake.Handler;
 import pl.fox.snake.Launcher;
 
 import java.awt.*;
 
 
 public class Field {
+
+    private Handler handler;
 
     private final int RAND_POS_X = 70;
     private final int RAND_POS_Y = 40;
@@ -15,6 +18,10 @@ public class Field {
     private int food_x;
     private int food_y;
     private int bon;
+
+    public Field(Handler handler){
+        this.handler = handler;
+    }
 
 
     public void update(){
@@ -52,13 +59,13 @@ public class Field {
     }
 
     private void checkFood() {
-        if((Player.snakex[0] == food_x) && (Player.snakey[0] == food_y)) {
+        if((handler.getPlayer().getSnakex()[0] == food_x) && (handler.getPlayer().getSnakey()[0] == food_y)) {
             if(bon == 1)
-                Player.score += 100;
+                handler.getPlayer().setScore(handler.getPlayer().getScore() + 100);
             else
-                Player.score += 50;
+                handler.getPlayer().setScore(handler.getPlayer().getScore() + 50);
 
-            Player.snakeLenght++;
+            handler.getPlayer().setSnakeLenght(handler.getPlayer().getSnakeLenght() + 1);
             locateFood();
         }
     }

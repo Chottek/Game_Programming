@@ -16,6 +16,7 @@ public class Game implements Runnable{
     public static Thread thread;
     private BufferStrategy bs;
     private Graphics g;
+    private Handler handler;
 
     private Player player;
     private Field field;
@@ -31,8 +32,9 @@ public class Game implements Runnable{
         this.title = title;
         this.width = width;
         this.height = height;
+        handler = new Handler(this);
         player = new Player();
-        field = new Field();
+        field = new Field(handler);
         keyManager = new KeyManager();
 
         field.locateFood();
@@ -51,7 +53,7 @@ public class Game implements Runnable{
     }
 
     private void checkDeathChoice(){
-        if(Player.isDead){
+        if(handler.getPlayer().isDead()){
             if(KeyManager.keyJustPressed(KeyEvent.VK_SPACE)){
                 player.init();
                 field.locateFood();
@@ -67,7 +69,7 @@ public class Game implements Runnable{
         if(!isStarted)
             checkIfStarted();
 
-        else if(Player.isDead)
+        else if(handler.getPlayer().isDead())
             checkDeathChoice();
 
         else{
@@ -87,7 +89,7 @@ public class Game implements Runnable{
 
         g.clearRect(0,0, width, height);
 
-        if(!Player.isDead){
+        if(!handler.getPlayer().isDead()){
             field.render(g);
             player.render(g);
         }
@@ -142,6 +144,10 @@ public class Game implements Runnable{
     public synchronized void stop(){
         if(isRunning)
             try{ thread.join(); }catch(Exception fox){fox.printStackTrace();}
+    }
+
+    public Player getPlayer(){
+        return player;
     }
 
 
