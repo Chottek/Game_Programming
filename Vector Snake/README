@@ -5,3 +5,10 @@ Vector Snake
 -Collect food
 -Beat your highscores
 -Have fun :)
+
+CHANGELOG:
+
+-Improved collision detection
+-Changed some graphics
+-Rebuilt project with handler, getters and setters
+-Press ESC to pause
