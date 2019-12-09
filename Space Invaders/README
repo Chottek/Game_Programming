@@ -9,3 +9,11 @@ SPACE INVADERS
 -Have fun
 
 -Game is much more dynamic than screenshot shows it :P
+
+CHANGELOG:
+
+-New pause screen
+-Added missile smoke
+-Set rendering hints (antialiasing) <- smoother edges
+-Changed colors of ships on individual levels
+-Added new screenshot
