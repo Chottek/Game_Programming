@@ -28,6 +28,9 @@ public class Game implements Runnable {
     private PlayerDeath playerDeath;
     private MissileImpact missileImpact;
     private NextLevel nextLevel;
+    private PlayerMissileFuel playerMissileFuel;
+
+    private Handler handler;
 
     private String title;
     private int width, height;
@@ -42,15 +45,18 @@ public class Game implements Runnable {
         this.width = width;
         this.height = height;
 
-        alienShip = new AlienShip();
+        handler = new Handler(this);
+
+        alienShip = new AlienShip(handler);
         player = new Player();
-        enemy = new Enemy();
+        enemy = new Enemy(handler);
         keyManager = new KeyManager();
         points = new Points();
         enemyDeath = new EnemyDeath();
         playerDeath = new PlayerDeath();
         missileImpact = new MissileImpact();
-        nextLevel = new NextLevel();
+        nextLevel = new NextLevel(handler);
+        playerMissileFuel = new PlayerMissileFuel();
 
         player.init();
 
@@ -69,13 +75,14 @@ public class Game implements Runnable {
     }
 
     private void checkDeathChoice() {
-        if (Player.isDead) {
+        if (handler.getGame().getPlayer().isDead()) {
             if (KeyManager.keyJustPressed(KeyEvent.VK_SPACE)) {
                 isStarted = false;
                 player.init();
                 enemy.init();
                 alienShip.clearStartTimer();
                 alienShip.uncheckDrawn();
+                playerMissileFuel.clear();
             } else if (KeyManager.keyJustPressed(KeyEvent.VK_ESCAPE))
                 System.exit(0);
         }
@@ -89,6 +96,9 @@ public class Game implements Runnable {
     }
 
     private void checkPause() {
+        if(!isStarted)
+            return;
+
         if (KeyManager.keyJustPressed(KeyEvent.VK_ESCAPE))
             isPaused = !isPaused;
     }
@@ -100,12 +110,12 @@ public class Game implements Runnable {
         if (!isStarted)
             checkIfStarted();
 
-        else if (Player.hasWon) {
+        else if (handler.getGame().getPlayer().isHasWon()) {
             nextLevel.update();
             checkLevelAnnoucement();
             alienShip.clearStartTimer();
             alienShip.uncheckDrawn();
-        } else if (Player.isDead)
+        } else if (handler.getGame().getPlayer().isDead())
             checkDeathChoice();
 
         else {
@@ -115,6 +125,7 @@ public class Game implements Runnable {
                 player.update();
                 points.update();
                 enemyDeath.update();
+                playerMissileFuel.update();
                 missileImpact.update();
                 playerDeath.update();
             }
@@ -127,7 +138,12 @@ public class Game implements Runnable {
             display.getCanvas().createBufferStrategy(3);
             return;
         }
+
         g = bs.getDrawGraphics();
+
+        Graphics2D g2d = (Graphics2D) g;
+
+        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
         g.clearRect(0, 0, width, height);
 
@@ -138,17 +154,12 @@ public class Game implements Runnable {
                 g.drawString("Press SPACE to start", 150, Launcher.height / 2);
         }
 
-        if (Player.hasWon)
+        if (handler.getGame().getPlayer().isHasWon())
             nextLevel.render(g);
 
-        if (isPaused) {
-            g.setFont(new Font("Arial", Font.BOLD, 30));
-            g.setColor(Color.GREEN);
-            g.drawString("PAUSED", Launcher.width / 2 - 100, Launcher.height / 2);
-        }
 
-
-        if (!Player.isDead) {
+        if (!handler.getGame().getPlayer().isDead()) {
+            playerMissileFuel.render(g);
             alienShip.render(g);
             player.render(g);
             enemy.render(g);
@@ -162,7 +173,13 @@ public class Game implements Runnable {
             g.drawString("GAME OVER", (Launcher.width - 200) / 2, Launcher.height / 2 - 50);
             g.drawString("Press SPACE to retry or ESC to exit", 45, Launcher.height / 2);
             g.setColor(Color.YELLOW);
-            g.drawString("Score: "+ Player.score, (Launcher.width - 200) / 2, Launcher.height / 2 + 50);
+            g.drawString("Score: "+ handler.getGame().getPlayer().getScore(), (Launcher.width - 200) / 2, Launcher.height / 2 + 50);
+        }
+
+        if (isPaused) {
+            g.setColor(Color.GRAY);
+            g.fillRoundRect(Launcher.width / 2 - 30, (Launcher.height - 100) / 2, 30, 100, 10, 10);
+            g.fillRoundRect(Launcher.width / 2 + 20, (Launcher.height - 100) / 2, 30, 100, 10, 10);
         }
 
         bs.show();
@@ -215,5 +232,11 @@ public class Game implements Runnable {
                 fox.printStackTrace();
             }
     }
+
+    public Player getPlayer(){
+        return player;
+    }
+
+    public PlayerMissileFuel getPMF(){return playerMissileFuel;}
 
 }

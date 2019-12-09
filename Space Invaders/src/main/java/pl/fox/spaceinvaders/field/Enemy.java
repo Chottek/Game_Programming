@@ -1,5 +1,6 @@
 package pl.fox.spaceinvaders.field;
 
+import pl.fox.spaceinvaders.Handler;
 import pl.fox.spaceinvaders.Launcher;
 import pl.fox.spaceinvaders.graphics.*;
 
@@ -8,6 +9,8 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class Enemy {
+
+    private Handler handler;
 
     private ArrayList<Float> x;
     private ArrayList<Float> y;
@@ -20,7 +23,8 @@ public class Enemy {
     private int shipBoundsX = 30;
     private int shipBoundsY = 10;
 
-    public Enemy() {
+    public Enemy(Handler handler) {
+        this.handler = handler;
         init();
     }
 
@@ -80,9 +84,8 @@ public class Enemy {
 
     private void checkPlayerHit() {
         for (int i = 0; i < shotX.size(); i++) {
-            if (shotX.get(i) >= Player.x && shotX.get(i) <= Player.x + Player.boundsX
-                    && shotY.get(i) >= Player.y && shotY.get(i) <= Player.y + 10) {
-                Player.life--;
+            if (getMissileBounds(i).intersects(handler.getGame().getPlayer().getCollisionBounds())) {
+                handler.getGame().getPlayer().subLife();
                 PlayerDeath.add(shotX.get(i), shotY.get(i) + 5);
                 shotX.remove(i);
                 shotY.remove(i);
@@ -91,19 +94,27 @@ public class Enemy {
         }
     }
 
+    public Rectangle getShipBounds(int index){
+        return new Rectangle(x.get(index).intValue(), y.get(index).intValue(), 30, 10);
+    }
+
+    public Rectangle getMissileBounds(int index){
+        return new Rectangle(shotX.get(index), shotY.get(index), 5, 10);
+    }
+
     private void checkBulletHit() {
         for (int i = 0; i < x.size(); i++) {
-            for (int j = 0; j < Player.shotX.size(); j++) {
-                if (Player.shotX.get(j) >= x.get(i) && Player.shotX.get(j) < x.get(i) + shipBoundsX
-                        && Player.shotY.get(j) >= y.get(i) && Player.shotY.get(j) <= y.get(i) + shipBoundsY) {
-                    Player.score += (100 * Player.level);
-                    Points.add(x.get(i).intValue() + 20, y.get(i).intValue(), 100 * Player.level);
+            for (int j = 0; j < handler.getGame().getPlayer().getShotX().size(); j++) {
+                if (handler.getGame().getPlayer().getShotCollisionBounds(j).intersects(getShipBounds(i))) {
+                    handler.getGame().getPlayer().setScore(handler.getGame().getPlayer().getScore() +
+                            (100 * handler.getGame().getPlayer().getLevel()));
+                    Points.add(x.get(i).intValue() + 20, y.get(i).intValue(), 100 * handler.getGame().getPlayer().getLevel());
                     EnemyDeath.add(x.get(i).intValue(), y.get(i).intValue(), 30, 10);
                     x.remove(i);
                     y.remove(i);
-                    if(Player.addOn != 1){
-                        Player.shotX.remove(j);
-                        Player.shotY.remove(j);
+                    if(handler.getGame().getPlayer().getAddOn() != 1){
+                        handler.getGame().getPlayer().getShotX().remove(j);
+                        handler.getGame().getPlayer().getShotY().remove(j);
                     }
 
                     return;
@@ -117,15 +128,15 @@ public class Enemy {
         if (x.size() > 35)
             swarmSpeed = 0.5f;
         else if (x.size() > 30 && x.size() <= 34)
-            swarmSpeed = 0.8f + (float) Player.level / 4;
+            swarmSpeed = 0.8f + (float) handler.getGame().getPlayer().getLevel() / 4;
         else if (x.size() > 20 && x.size() <= 30)
-            swarmSpeed = 1f + (float) Player.level / 4;
+            swarmSpeed = 1f + (float) handler.getGame().getPlayer().getLevel() / 4;
         else if (x.size() > 10 && x.size() <= 20)
-            swarmSpeed = 1.2f + (float) Player.level / 4;
+            swarmSpeed = 1.2f + (float) handler.getGame().getPlayer().getLevel() / 4;
         else if (x.size() <= 10 && x.size() >= 2)
-            swarmSpeed = 2f + (float) Player.level / 4;
+            swarmSpeed = 2f + (float) handler.getGame().getPlayer().getLevel() / 4;
         else if (x.size() < 2)
-            swarmSpeed = 6f + (float) Player.level / 4;
+            swarmSpeed = 6f + (float) handler.getGame().getPlayer().getLevel() / 4;
     }
 
     private void shoot() {
@@ -134,11 +145,11 @@ public class Enemy {
         for (int i = 0; i < y.size(); i++) {
             Random rand = new Random();
             int draw = 0;
-            if(Player.level == 1)
+            if(handler.getGame().getPlayer().getLevel() == 1)
                 draw = rand.nextInt(1000);
-            else if (Player.level == 2)
+            else if (handler.getGame().getPlayer().getLevel() == 2)
                 draw = rand.nextInt(800);
-            else if (Player.level > 2)
+            else if (handler.getGame().getPlayer().getLevel() > 2)
                 draw = rand.nextInt(600);
 
             if(draw == 2 && shotTimer.get(i) == 100) {
@@ -172,13 +183,12 @@ public class Enemy {
     }
 
     private void checkMissilesImpact() {
-        for(int i = 0; i < Player.shotX.size(); i++){
+        for(int i = 0; i < handler.getGame().getPlayer().getShotX().size(); i++){
             for(int j = 0; j < shotX.size(); j++){
-                if(Player.shotX.get(i) >= shotX.get(j) && Player.shotX.get(i) <= shotX.get(j) + 5
-                    && Player.shotY.get(i) >= shotY.get(j) && Player.shotY.get(i) <= shotY.get(j) + 10){
-                    MissileImpact.add(Player.shotX.get(i), Player.shotY.get(i));
-                    Player.shotX.remove(i);
-                    Player.shotY.remove(i);
+                if(handler.getGame().getPlayer().getShotCollisionBounds(i).intersects(getMissileBounds(j))){
+                    MissileImpact.add(handler.getGame().getPlayer().getShotX().get(i), handler.getGame().getPlayer().getShotY().get(i));
+                    handler.getGame().getPlayer().getShotX().remove(i);
+                    handler.getGame().getPlayer().getShotY().remove(i);
                     shotX.remove(j);
                     shotY.remove(j);
                     return;
@@ -189,8 +199,8 @@ public class Enemy {
 
     private void checkAlienWin() {
         for (int i = 0; i < y.size(); i++) {
-            if (y.get(i) >= Player.y - 10){
-                Player.isDead = true;
+            if (y.get(i) >= handler.getGame().getPlayer().getY() - 10){
+                handler.getGame().getPlayer().setDead(true);
                 PlayerDeath.removeAll();
                 Points.removeAll();
             }
@@ -199,16 +209,17 @@ public class Enemy {
 
     private void checkPlayerWin(){
         if(x.size() == 0){
-            Player.hasWon = true;
+            handler.getGame().getPlayer().setHasWon(true);
             EnemyDeath.removeAll();
             Points.removeAll();
             NextLevel.init();
             shotX.clear();
             shotY.clear();
             shotTimer.clear();
-            Player.shotX.clear();
-            Player.shotY.clear();
-            Player.level++;
+            handler.getGame().getPMF().clear();
+            handler.getGame().getPlayer().getShotX().clear();
+            handler.getGame().getPlayer().getShotY().clear();
+            handler.getGame().getPlayer().setLevel(handler.getGame().getPlayer().getLevel() + 1);
         }
 
     }
@@ -227,19 +238,25 @@ public class Enemy {
     }
 
     public void render(Graphics g) {
-        if(Player.level == 1)
-             g.setColor(Color.RED);
-        else if(Player.level == 2)
-            g.setColor(Color.BLUE);
-        else if(Player.level == 3)
-            g.setColor(Color.YELLOW);
-        else if(Player.level == 4)
-            g.setColor(Color.MAGENTA);
+        switch(handler.getGame().getPlayer().getLevel()){
+            case 1: g.setColor(Color.RED); break;
+            case 2: g.setColor(Color.BLUE); break;
+            case 3: g.setColor(Color.ORANGE); break;
+            case 4: g.setColor(Color.MAGENTA); break;
+            case 5: g.setColor(Color.GRAY); break;
+            case 6: g.setColor(Color.GREEN); break;
+        }
 
         for (int i = 0; i < x.size(); i++)
             g.fillRect(x.get(i).intValue(), y.get(i).intValue(), 30, 10);
 
-        g.setColor(Color.GREEN);
+        switch(handler.getGame().getPlayer().getLevel()){
+            case 1: g.setColor(Color.GREEN); break;
+            case 2: g.setColor(Color.RED); break;
+            case 3: g.setColor(Color.BLUE); break;
+            case 4: g.setColor(Color.PINK); break;
+            case 5: g.setColor(Color.WHITE); break;
+        }
         for (int j = 0; j < shotX.size(); j++)
             g.fillRect(shotX.get(j), shotY.get(j), 5, 10);
     }

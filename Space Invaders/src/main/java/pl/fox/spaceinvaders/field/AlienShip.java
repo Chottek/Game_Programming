@@ -1,5 +1,6 @@
 package pl.fox.spaceinvaders.field;
 
+import pl.fox.spaceinvaders.Handler;
 import pl.fox.spaceinvaders.Launcher;
 import pl.fox.spaceinvaders.graphics.Addons;
 import pl.fox.spaceinvaders.graphics.Points;
@@ -9,6 +10,7 @@ import java.util.Random;
 
 public class AlienShip {
 
+    private Handler handler;
 
     private float x;
     private final float y = 10f;
@@ -20,7 +22,13 @@ public class AlienShip {
     private final int boundsX = 40;
     private final int boundsY = 20;
 
-    private Addons addons = new Addons();
+    private Addons addons;
+
+    public AlienShip(Handler handler){
+        this.handler = handler;
+
+        addons = new Addons(handler);
+    }
 
     private void drawShip() {
         if (startTimer < 600)
@@ -59,22 +67,26 @@ public class AlienShip {
     }
 
     private void checkHit() {
-        for (int j = 0; j < Player.shotX.size(); j++) {
-            if (Player.shotX.get(j) >= x && Player.shotX.get(j) < x + boundsX
-                    && Player.shotY.get(j) >= y && Player.shotY.get(j) <= y + boundsY) {
-                Player.score += (400 * Player.level);
+        for (int j = 0; j < handler.getGame().getPlayer().getShotX().size(); j++) {
+            if (handler.getGame().getPlayer().getShotCollisionBounds(j).intersects(getCollisionBounds())) {
+                handler.getGame().getPlayer().setScore(handler.getGame().getPlayer().getScore() +
+                        (400 * handler.getGame().getPlayer().getLevel()));
 
                 addons.draw();
                 addons.x.add((int) x + 20);
                 addons.y.add((int) y);
 
-                Points.add((int) x + 20, (int) y, 400 * Player.level);
+                Points.add((int) x + 20, (int) y, 400 * handler.getGame().getPlayer().getLevel());
                 isDrawn = false;
-                Player.shotX.remove(j);
-                Player.shotY.remove(j);
+                handler.getGame().getPlayer().getShotX().remove(j);
+                handler.getGame().getPlayer().getShotY().remove(j);
                 return;
             }
         }
+    }
+
+    private Rectangle getCollisionBounds(){
+        return new Rectangle((int) x, (int) y, boundsX, boundsY);
     }
 
     public void update() {

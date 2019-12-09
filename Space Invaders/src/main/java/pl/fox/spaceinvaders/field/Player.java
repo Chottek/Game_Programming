@@ -3,6 +3,7 @@ package pl.fox.spaceinvaders.field;
 import pl.fox.spaceinvaders.Launcher;
 import pl.fox.spaceinvaders.graphics.EnemyDeath;
 import pl.fox.spaceinvaders.graphics.PlayerDeath;
+import pl.fox.spaceinvaders.graphics.PlayerMissileFuel;
 import pl.fox.spaceinvaders.input.KeyManager;
 
 import java.awt.*;
@@ -11,29 +12,29 @@ import java.util.ArrayList;
 
 public class Player {
 
-    public static float x;
-    public static float y;
+    private float x;
+    private float y;
 
     private final float SPEED = 4.0f;
 
     public static final int boundsX = 50;
 
-    public static boolean isDead;
-    public static boolean hasWon;
+    private boolean isDead;
+    private boolean hasWon;
 
     private boolean isReloading;
     private int reloadTimer, reloadCooldown;
 
-    public static int life = 3;
+    private int life = 3;
 
-    public static int level;
-    public static int score;
+    private int level;
+    private int score;
 
-    public static int addOn;
+    private int addOn;
     private int addOnCounter = 0;
 
-    public static ArrayList<Integer> shotX;
-    public static ArrayList<Integer> shotY;
+    private ArrayList<Integer> shotX;
+    private ArrayList<Integer> shotY;
 
     public Player() {
         shotX = new ArrayList<>();
@@ -84,8 +85,17 @@ public class Player {
     }
 
     private void moveShot() {
-        for (int i = 0; i < shotX.size(); i++)
+        for (int i = 0; i < shotX.size(); i++){
             shotY.set(i, shotY.get(i) - 10);
+            PlayerMissileFuel.add((shotX.get(i) + 2), shotY.get(i) + 3, 7);
+
+            if(shotY.get(i) < 0){
+                shotX.remove(i);
+                shotY.remove(i);
+            }
+
+        }
+
     }
 
     private void checkDeath() {
@@ -161,5 +171,101 @@ public class Player {
             g.drawString("PENETRATING MISSILE", 10, Launcher.height - 20);
         if (addOn == 2)
             g.drawString("QUICKSHOTER", 10, Launcher.height - 20);
+    }
+
+    public Rectangle getShotCollisionBounds(int index){
+        return new Rectangle(shotX.get(index), shotY.get(index), 5, 10);
+    }
+
+    public Rectangle getCollisionBounds(){
+        return new Rectangle((int) x, (int) y, 50, 15);
+    }
+
+    public float getX() {
+        return x;
+    }
+
+    public void setX(float x) {
+        this.x = x;
+    }
+
+    public float getY() {
+        return y;
+    }
+
+    public void setY(float y) {
+        this.y = y;
+    }
+
+    public boolean isDead() {
+        return isDead;
+    }
+
+    public void setDead(boolean dead) {
+        isDead = dead;
+    }
+
+    public boolean isHasWon() {
+        return hasWon;
+    }
+
+    public void setHasWon(boolean hasWon) {
+        this.hasWon = hasWon;
+    }
+
+    public int getLife() {
+        return life;
+    }
+
+    public void setLife(int life) {
+        this.life = life;
+    }
+
+    public void subLife(){
+        this.life--;
+    }
+
+    public void addLife(){
+        this.life++;
+    }
+
+    public int getLevel() {
+        return level;
+    }
+
+    public void setLevel(int level) {
+        this.level = level;
+    }
+
+    public int getScore() {
+        return score;
+    }
+
+    public void setScore(int score) {
+        this.score = score;
+    }
+
+    public int getAddOn() {
+        return addOn;
+    }
+
+    public void setAddOn(int addOn) {
+        this.addOn = addOn;
+    }
+
+    public ArrayList<Integer> getShotX() {
+        return shotX;
+    }
+
+    public void setShotX(ArrayList<Integer> shotX) {
+        this.shotX = shotX;
+    }
+
+    public ArrayList<Integer> getShotY() {
+        return shotY;
+    }
+
+    public void setShotY(ArrayList<Integer> shotY) {
+        this.shotY = shotY;
     }
 }

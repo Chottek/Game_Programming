@@ -1,5 +1,6 @@
 package pl.fox.spaceinvaders.graphics;
 
+import pl.fox.spaceinvaders.Handler;
 import pl.fox.spaceinvaders.Launcher;
 import pl.fox.spaceinvaders.field.Player;
 
@@ -9,6 +10,12 @@ import java.util.Random;
 
 public class Addons {
 
+    private Handler handler;
+
+    public Addons(Handler handler){
+        this.handler = handler;
+    }
+
     private int addOn;
     public ArrayList<Integer> x = new ArrayList<>();
     public ArrayList<Integer> y = new ArrayList<>();
@@ -16,7 +23,7 @@ public class Addons {
 
     public void draw(){
         Random rand = new Random();
-        if(Player.life == 4)
+        if(handler.getGame().getPlayer().getLife() == 4)
             addOn = rand.nextInt(3)+1;
         else
             addOn = rand.nextInt(3);
@@ -37,29 +44,31 @@ public class Addons {
     }
 
     private void checkPlayerShot(){
-        for(int i = 0; i < Player.shotX.size(); i++){
+        for(int i = 0; i < handler.getGame().getPlayer().getShotX().size(); i++){
             for (int j = 0; j < y.size() ; j++) {
-                if(Player.shotX.get(i) >= x.get(j) && Player.shotX.get(i) <= x.get(j) + 20
-                        && Player.shotY.get(i) >= y.get(j) && Player.shotY.get(i) <= y.get(j) + 20){
-                    Player.addOn = addOns.get(j);
+                if(handler.getGame().getPlayer().getShotCollisionBounds(i).intersects(getCollisionBounds(j))){
+                    handler.getGame().getPlayer().setAddOn(addOns.get(j));
                     x.remove(j);
                     y.remove(j);
                     addOns.remove(j);
                 }
             }
         }
-
     }
 
     private void checkPlayerTouch(){
         for(int i = 0; i < y.size(); i++){
-            if(x.get(i) >= Player.x && x.get(i) <= Player.x + Player.boundsX
-                && y.get(i) >= Player.y && y.get(i) <= Player.y + 20){
+            if(getCollisionBounds(i).intersects(handler.getGame().getPlayer().getCollisionBounds())){
+                handler.getGame().getPlayer().setAddOn(addOns.get(i));
                 x.remove(i);
                 y.remove(i);
                 addOns.remove(i);
             }
         }
+    }
+
+    private Rectangle getCollisionBounds(int index){
+        return new Rectangle(x.get(index), y.get(index), 20, 20);
     }
 
     public void update(){

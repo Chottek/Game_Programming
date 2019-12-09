@@ -41,10 +41,13 @@ public class PlayerDeath {
     }
 
     public void render(Graphics g) {
+        Graphics2D g2d = (Graphics2D) g;
+        g2d.setStroke(new BasicStroke(6));
         g.setColor(Color.RED);
-        for (int i = 0; i < x.size(); i++) {
+        for (int i = 0; i < x.size(); i++)
             drawCircle(g, x.get(i) , y.get(i), radius.get(i));
-        }
+
+        g2d.setStroke(new BasicStroke(1));
     }
 
     public void drawCircle(Graphics g, int xCenter, int yCenter, int r) {
