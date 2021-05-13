@@ -7,7 +7,7 @@ public:
    int score;
    double angle;
    Player(){
-
+      init();
    }
 
 
@@ -25,8 +25,8 @@ void Player::move(){
  	return;     
     }
 
-    x += speed * Math.cos(angle);
-    y += speed * Math.sin(angle);
+    x += speed * cos(angle);
+    y += speed * sin(angle);
 }
 
 void Player::turn(){
