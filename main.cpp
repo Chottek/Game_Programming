@@ -31,7 +31,7 @@ int main(int , char **) {
   errcheck(SDL_Init(SDL_INIT_VIDEO) != 0);
 
   SDL_Window *window = SDL_CreateWindow(
-      "My Next Superawesome Game", SDL_WINDOWPOS_UNDEFINED,
+      "SpaceShooter", SDL_WINDOWPOS_UNDEFINED,
       SDL_WINDOWPOS_UNDEFINED, width, height, SDL_WINDOW_SHOWN);
   errcheck(window == nullptr);
 
