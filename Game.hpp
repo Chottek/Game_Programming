@@ -29,6 +29,6 @@ class Game {
         SDL_Renderer *renderer;
 
 
-}
+};
 
 #endif /* Game_hpp */

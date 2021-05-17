@@ -1,14 +1,20 @@
 #include "Game.hpp"
 
-Game *game = nullpntr;
+const char *title = "Geometric Wars";
+const int width = 800;
+const int height = 600;
+const int position = SDL_WINDOWPOS_CENTERED;
+const bool isFullScreen = false;
 
 int main(int argc, const char * argv[]){
 
-    game = new Game();
+    Game * game = new Game();
+    
+    game -> init(title, position, position, width, height, isFullScreen);
 
-    while(game->isRunning()){
+    while(game -> running()){
         game -> handleEvents();
-        game -> udpate();
+        game -> update();
         game -> render();
     }
 
