@@ -19,7 +19,7 @@ class Game {
         void render();
         void clean();
 
-        bool isRunning(){
+        bool running(){
             return isRunning;
         }
 
