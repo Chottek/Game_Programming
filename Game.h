@@ -1,9 +1,7 @@
-
-#ifndef Game_hpp
-#define Game_hpp
+#pragma once
 
 #include "SDL2/SDL.h"
-#include <stdio.h>
+#include "SDL2/SDL_image.h"
 #include <iostream>
 
 class Game {
@@ -24,11 +22,12 @@ class Game {
         }
 
     private:
-        bool isRunning;
+        int count = 0;
+        bool isRunning = false;
         SDL_Window *window;
         SDL_Renderer *renderer;
 
 
 };
 
-#endif /* Game_hpp */
+

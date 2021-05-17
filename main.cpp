@@ -1,4 +1,4 @@
-#include "Game.hpp"
+#include "Game.h"
 
 const char *title = "Geometric Wars";
 const int width = 800;
