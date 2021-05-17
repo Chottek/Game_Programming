@@ -1,9 +1,10 @@
 
 #include "Game.h"
+#include "TextureLoader.h"
+#include "GameObj.h"
 
+GameObj* player;
 
-SDL_Texture* playerTexture;
-SDL_Rect srcRect, destRect;
 
 Game::Game(){
 
@@ -40,9 +41,11 @@ void Game::init(const char *title, int xPos, int yPos, int width, int height, bo
         isRunning = true;
     }
     
-    SDL_Surface* tmpSurface = IMG_Load("assets/player.png");     		//loading a surface
-    playerTexture = SDL_CreateTextureFromSurface(renderer, tmpSurface);	//creating texture from surface
-    SDL_FreeSurface(tmpSurface);						//cleaning the surface
+    player = new GameObj("assets/player.png", renderer, 10, 10); 
+    
+    //SDL_Surface* tmpSurface = IMG_Load("assets/player.png");     		//loading a surface
+    //playerTexture = SDL_CreateTextureFromSurface(renderer, tmpSurface);	//creating texture from surface
+    //SDL_FreeSurface(tmpSurface);						//cleaning the surface
     
 }
 
@@ -58,19 +61,13 @@ void Game::handleEvents(){
 }
 
 void Game::update(){
-	count++;
-	
-	destRect.h = 32;
-	destRect.w = 32;
-	
-	
-	std::cout << count << std::endl;
+	player -> update();
 }
 
 void Game::render(){
     SDL_RenderClear(renderer); 
     
-    SDL_RenderCopy(renderer, playerTexture, NULL, &destRect); //rendering player texture here
+    player -> render();
     
     SDL_RenderPresent(renderer);
 
