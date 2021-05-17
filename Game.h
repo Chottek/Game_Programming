@@ -20,6 +20,9 @@ class Game {
         bool running(){
             return isRunning;
         }
+        
+      
+        static SDL_Event event;
 
     private:
         int count = 0;

@@ -1,20 +1,19 @@
 #include "GameObj.h"
 #include "TextureLoader.h"
 
-GameObj::GameObj(const char* textures, SDL_Renderer* ren, int x, int y){
+GameObj::GameObj(const char* textures, SDL_Renderer* ren, int x, int y, int speed){
     renderer = ren;
     objTexture = TextureLoader::loadTexture(textures, ren);
 	
     xPos = x;
     yPos = y;
+    
+    speed = speed;
 
     std::cout << "GameObj inited with textures " << textures << std::endl;
 }
 
 void GameObj::update(){
-   
-   xPos++;
-   yPos++;
    
    srcRect.w = 64;
    srcRect.h = 64;
@@ -29,4 +28,16 @@ void GameObj::update(){
 
 void GameObj::render(){
    SDL_RenderCopy(renderer, objTexture, NULL, &destRect);
+}
+
+void GameObj::addX(int value){
+   xPos += value;
+}
+
+void GameObj::addY(int value){
+   yPos += value;
+}
+
+int GameObj::getSpeed(){
+   return speed;
 }

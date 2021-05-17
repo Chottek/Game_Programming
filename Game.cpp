@@ -4,6 +4,8 @@
 #include "GameObj.h"
 
 GameObj* player;
+SDL_Event Game::event;
+
 
 
 Game::Game(){
@@ -41,7 +43,7 @@ void Game::init(const char *title, int xPos, int yPos, int width, int height, bo
         isRunning = true;
     }
     
-    player = new GameObj("assets/player.png", renderer, 10, 10); 
+    player = new GameObj("assets/player.png", renderer, 10, 10, 5); 
     
     //SDL_Surface* tmpSurface = IMG_Load("assets/player.png");     		//loading a surface
     //playerTexture = SDL_CreateTextureFromSurface(renderer, tmpSurface);	//creating texture from surface
@@ -50,11 +52,22 @@ void Game::init(const char *title, int xPos, int yPos, int width, int height, bo
 }
 
 void Game::handleEvents(){
-    SDL_Event event;
+    
+   
+    
     SDL_PollEvent(&event);
     switch(event.type){
         case SDL_QUIT:
             isRunning = false; break;
+            
+        case SDL_KEYDOWN:
+             switch( event.key.keysym.sym) {
+             	case SDLK_LEFT: player -> addX(player -> getSpeed()); break;
+             	case SDLK_RIGHT: player -> addX(player -> getSpeed()); break;
+             	case SDLK_UP: player -> addY(player -> getSpeed()); break;
+             	case SDLK_DOWN: player -> addY(player -> getSpeed()); break;
+             	default: break;
+             }
 
         default: break;
     }
