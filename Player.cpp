@@ -10,22 +10,23 @@ Player::Player(const char* textures, SDL_Renderer* ren, float x, float y, float 
 
     speed = spd;
 
+    angle = 0.1;
+
     std::cout << "Player inited with texture " << textures << std::endl;
 }
 
 void Player::update(){
+    update_direction();
 
     srcRect.w = 64;
     srcRect.h = 64;
     srcRect.x = 0;
     srcRect.y = 0;
 
-    destRect.x = xPos;
-    destRect.y = yPos;
+    destRect.x = (int) xPos;
+    destRect.y = (int) yPos;
     destRect.w = srcRect.w * 2;
     destRect.h = srcRect.h * 2;
-
-    update_direction();
 
 }
 
@@ -38,16 +39,18 @@ void Player::update_direction(){
     const Uint8* key_state = SDL_GetKeyboardState(nullptr);
 
     if (key_state[SDL_SCANCODE_W]){
-        yPos -= speed;
+        xPos += speed * cos(angle);
+        yPos += speed * sin(angle);
     }
     else if (key_state[SDL_SCANCODE_S]){
-        yPos += speed;
+        xPos += (-speed / 2) * cos(angle);
+        yPos += (-speed / 2) * sin(angle);
     }
     else if (key_state[SDL_SCANCODE_A]){
-        xPos -= speed;
+        angle -= 0.07;
     }
     else if (key_state[SDL_SCANCODE_D]){
-        xPos += speed;
+        angle += 0.07;
     }
 }
 

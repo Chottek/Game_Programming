@@ -27,6 +27,7 @@ private:
     float xPos;
     float yPos;
     float speed;
+    double angle;
 
     SDL_Texture* objTexture;
     SDL_Rect srcRect, destRect;
