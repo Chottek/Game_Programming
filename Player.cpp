@@ -38,19 +38,19 @@ void Player::update_direction(){
 
     const Uint8* key_state = SDL_GetKeyboardState(nullptr);
 
-    if (key_state[SDL_SCANCODE_W]){
+    if (key_state[SDL_SCANCODE_W] || key_state[SDL_SCANCODE_UP]){
         xPos += speed * cos(angle);
         yPos += speed * sin(angle);
     }
-    if (key_state[SDL_SCANCODE_S]){
+    if (key_state[SDL_SCANCODE_S] || key_state[SDL_SCANCODE_DOWN]){
         xPos += (-speed / 2) * cos(angle);
         yPos += (-speed / 2) * sin(angle);
     }
-    if (key_state[SDL_SCANCODE_A]){
-        angle -= 0.07;
+    if (key_state[SDL_SCANCODE_A] || key_state[SDL_SCANCODE_LEFT]){
+        angle -= 0.1;
     }
-    if (key_state[SDL_SCANCODE_D]){
-        angle += 0.07;
+    if (key_state[SDL_SCANCODE_D] || key_state[SDL_SCANCODE_RIGHT]){
+        angle += 0.1;
     }
 }
 
