@@ -1,7 +1,7 @@
 #include "Player.h"
 #include "TextureLoader.h"
 
-Player::Player(const char* textures, SDL_Renderer* ren, int x, int y, int spd){
+Player::Player(const char* textures, SDL_Renderer* ren, float x, float y, float spd){
     renderer = ren;
     objTexture = TextureLoader::loadTexture(textures, ren);
 
@@ -51,14 +51,14 @@ void Player::update_direction(){
     }
 }
 
-void Player::addX(int value){
+void Player::addX(float value){
     xPos += value;
 }
 
-void Player::addY(int value){
+void Player::addY(float value){
     yPos += value;
 }
 
-int Player::getSpeed(){
+float Player::getSpeed(){
     return speed;
 }

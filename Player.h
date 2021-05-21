@@ -10,23 +10,23 @@
 
 class Player {
 public:
-    Player(const char* textures, SDL_Renderer* renderer, int x, int y, int spd);
+    Player(const char* textures, SDL_Renderer* renderer, float x, float y, float spd);
     ~Player();
 
     void update();
     void render();
 
-    void addY(int value);
-    void addX(int value);
+    void addY(float value);
+    void addX(float value);
 
-    int getSpeed();
+    float getSpeed();
 
 private:
     void update_direction();
 
-    int xPos;
-    int yPos;
-    int speed;
+    float xPos;
+    float yPos;
+    float speed;
 
     SDL_Texture* objTexture;
     SDL_Rect srcRect, destRect;
