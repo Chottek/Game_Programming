@@ -22,7 +22,7 @@ public:
     float getSpeed();
 
 private:
-    void update_direction();
+    void move();
 
     float xPos;
     float yPos;

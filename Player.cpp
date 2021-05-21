@@ -19,17 +19,17 @@ Player::Player(const char* textures, SDL_Renderer* ren, float x, float y, float 
 void Player::update(){
     std::cout << "Player X :" << xPos << " Player Y: " << yPos << " Angle: " << angle << std::endl;
 
-    update_direction();
+    move();
 
-    srcRect.w = 64;
-    srcRect.h = 64;
+    srcRect.w = 32;
+    srcRect.h = 32;
     srcRect.x = 0;
     srcRect.y = 0;
 
     destRect.x = (int) xPos;
     destRect.y = (int) yPos;
-    destRect.w = srcRect.w * 2;
-    destRect.h = srcRect.h * 2;
+    destRect.w = srcRect.w ;
+    destRect.h = srcRect.h;
 
 }
 
@@ -38,7 +38,7 @@ void Player::render(){
     double r = MathUtils::toDegrees(angle);
     SDL_RenderCopyEx(renderer, objTexture, nullptr, &destRect, r, nullptr, SDL_FLIP_NONE);
 }
-void Player::update_direction(){
+void Player::move(){
 
     const Uint8* key_state = SDL_GetKeyboardState(nullptr);
 
