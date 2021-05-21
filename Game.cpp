@@ -40,7 +40,7 @@ void Game::init(const char *title, int xPos, int yPos, int width, int height, bo
         isRunning = true;
     }
 
-    player = new Player("assets/player.png", renderer, 10, 10, 5);
+    player = new Player("assets/player.png", renderer, 10.0F, 10.0F, 5.0F);
 
     //SDL_Surface* tmpSurface = IMG_Load("assets/player.png");     		//loading a surface
     //playerTexture = SDL_CreateTextureFromSurface(renderer, tmpSurface);	//creating texture from surface

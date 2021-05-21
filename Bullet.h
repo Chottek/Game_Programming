@@ -1,27 +1,28 @@
-//
-// Created by chotek on 21.05.2021.
-//
-
 #ifndef GEOMETRICWARS_BULLET_H
 #define GEOMETRICWARS_BULLET_H
 
+#include "Game.h"
 
 class Bullet {
 
 public:
-    Bullet(float initialX, float initialY, double direction);
+    Bullet(SDL_Renderer* ren, float initialX, float initialY, double direction);
     ~Bullet();
 
     void update();
     void render();
 
+    int age;
 
 private:
-    float x, y;
+    float x, y, speed;
     double angle;
     //Rectangle for collision checking -> if(bulletRect intersects object) do_sth();
+    SDL_Rect rect;
+    SDL_Renderer* renderer;
+
+    void updateRect();
 
 };
-
 
 #endif //GEOMETRICWARS_BULLET_H
