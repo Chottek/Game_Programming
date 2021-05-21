@@ -23,11 +23,19 @@ public:
 
 private:
     void move();
+    void speedUp();
+    void brake(Uint8* key_state);
 
     float xPos;
     float yPos;
     float speed;
     double angle;
+    double lastAngle;
+
+    bool isMovingForward;
+    float brakingPower;
+    float braking;
+    float speedingPower;
 
     SDL_Texture* objTexture;
     SDL_Rect srcRect, destRect;

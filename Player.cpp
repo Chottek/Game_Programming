@@ -43,8 +43,24 @@ void Player::move(){
     const Uint8* key_state = SDL_GetKeyboardState(nullptr);
 
     if (key_state[SDL_SCANCODE_W] || key_state[SDL_SCANCODE_UP]){
+        isMovingForward = true;
         xPos += speed * cos(angle);
         yPos += speed * sin(angle);
+        brakingPower = speed;
+    }else{
+        if(isMovingForward && brakingPower == speed){
+            lastAngle = angle;
+        }
+
+        if(isMovingForward && brakingPower > 0){
+            xPos += brakingPower * cos(lastAngle);
+            yPos += brakingPower * sin(lastAngle);
+            brakingPower -= 0.1;
+        }
+
+        if(isMovingForward && brakingPower <= 0){
+            isMovingForward = false;
+        }
     }
     if (key_state[SDL_SCANCODE_S] || key_state[SDL_SCANCODE_DOWN]){
         xPos += (-speed / 2) * cos(angle);
@@ -56,6 +72,18 @@ void Player::move(){
     if (key_state[SDL_SCANCODE_D] || key_state[SDL_SCANCODE_RIGHT]){
         angle += 0.1;
     }
+
+
+
+    std::cout << "isMovingForward: " << isMovingForward << std::endl;
+}
+
+void Player::speedUp() {
+
+}
+
+void Player::brake(Uint8* key_state){
+
 }
 
 void Player::addX(float value){
