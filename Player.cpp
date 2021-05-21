@@ -42,14 +42,14 @@ void Player::update_direction(){
         xPos += speed * cos(angle);
         yPos += speed * sin(angle);
     }
-    else if (key_state[SDL_SCANCODE_S]){
+    if (key_state[SDL_SCANCODE_S]){
         xPos += (-speed / 2) * cos(angle);
         yPos += (-speed / 2) * sin(angle);
     }
-    else if (key_state[SDL_SCANCODE_A]){
+    if (key_state[SDL_SCANCODE_A]){
         angle -= 0.07;
     }
-    else if (key_state[SDL_SCANCODE_D]){
+    if (key_state[SDL_SCANCODE_D]){
         angle += 0.07;
     }
 }
