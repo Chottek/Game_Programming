@@ -1,3 +1,11 @@
+//
+// Created by chotek on 21.05.2021.
+//
+
+#ifndef GEOMETRICWARS_GAME_H
+#define GEOMETRICWARS_GAME_H
+
+
 #pragma once
 
 #include "SDL2/SDL.h"
@@ -6,31 +14,33 @@
 
 class Game {
 
-    public:
-        Game();
-        ~Game();
+public:
+    Game();
+    ~Game();
 
-        void init(const char* title, int xPos, int yPos, int width, int height, bool isFullScreen);
-        
-        void handleEvents();
-        void update();
-        void render();
-        void clean();
+    void init(const char* title, int xPos, int yPos, int width, int height, bool isFullScreen);
 
-        bool running(){
-            return isRunning;
-        }
-        
-      
-        static SDL_Event event;
+    void handleEvents();
+    void update();
+    void render();
+    void clean();
 
-    private:
-        int count = 0;
-        bool isRunning = false;
-        SDL_Window *window;
-        SDL_Renderer *renderer;
+    bool running(){
+        return isRunning;
+    }
+
+
+    static SDL_Event event;
+
+private:
+    int count = 0;
+    bool isRunning = false;
+    SDL_Window *window;
+    SDL_Renderer *renderer;
 
 
 };
 
 
+
+#endif //GEOMETRICWARS_GAME_H

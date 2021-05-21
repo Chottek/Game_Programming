@@ -1,3 +1,8 @@
+
+#ifndef GEOMETRICWARS_TEXTURELOADER_H
+#define GEOMETRICWARS_TEXTURELOADER_H
+
+
 #pragma once
 #include "Game.h"
 
@@ -8,3 +13,6 @@ public:
 
 
 };
+
+
+#endif //GEOMETRICWARS_TEXTURELOADER_H

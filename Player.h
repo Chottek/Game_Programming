@@ -1,15 +1,17 @@
-#ifndef GEOMETRICWARS_GAMEOBJ_H
-#define GEOMETRICWARS_GAMEOBJ_H
+//
+// Created by chotek on 21.05.2021.
+//
 
+#ifndef GEOMETRICWARS_PLAYER_H
+#define GEOMETRICWARS_PLAYER_H
 
-#pragma once
 #include "Game.h"
 
-class GameObj {
 
+class Player {
 public:
-    GameObj(const char* textures, SDL_Renderer* renderer, int x, int y, int speed);
-    ~GameObj();
+    Player(const char* textures, SDL_Renderer* renderer, int x, int y, int spd);
+    ~Player();
 
     void update();
     void render();
@@ -20,6 +22,7 @@ public:
     int getSpeed();
 
 private:
+    void update_direction();
 
     int xPos;
     int yPos;
@@ -29,8 +32,7 @@ private:
     SDL_Rect srcRect, destRect;
     SDL_Renderer* renderer;
 
-
-
 };
 
-#endif //GEOMETRICWARS_GAMEOBJ_H
+
+#endif //GEOMETRICWARS_PLAYER_H

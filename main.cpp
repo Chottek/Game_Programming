@@ -14,24 +14,24 @@ int main(int argc, const char * argv[]){
     int frameTime;
 
     Game * game = new Game();
-    
+
     game -> init(title, position, position, width, height, isFullScreen);
 
     while(game -> running()){
-    	
-    	frameStart = SDL_GetTicks(); //Getting ticks from SDL instead of System nanotime
-    	
-   
+
+        frameStart = SDL_GetTicks(); //Getting ticks from SDL instead of System nanotime
+
+
         game -> handleEvents();
         game -> update();
         game -> render();
-        
+
         frameTime = SDL_GetTicks() - frameStart;
-        
+
         if(frameDelay > frameTime){
-          SDL_Delay(frameDelay - frameTime); //Delay updating using SDL to make everything smoother
+            SDL_Delay(frameDelay - frameTime); //Delay updating using SDL to make everything smoother
         }
-        
+
     }
 
     game -> clean();

@@ -1,12 +1,9 @@
 
 #include "Game.h"
-#include "TextureLoader.h"
-#include "GameObj.h"
+#include "Player.h"
 
-GameObj* player;
+Player* player;
 SDL_Event Game::event;
-
-
 
 Game::Game(){
 
@@ -23,13 +20,13 @@ void Game::init(const char *title, int xPos, int yPos, int width, int height, bo
 
     //if(isFullScreen){
     //    flags = SDL_WINDOW_FULLSCREEN;
-   // }
+    // }
 
     if(SDL_Init(SDL_INIT_EVERYTHING) == 0){
         std::cout << "SDL Initialized.." << std::endl;
 
         window = SDL_CreateWindow(title, xPos, yPos, width, height, flags);
-        
+
         if(window){
             std::cout << "Window initialized..." << std::endl;
         }
@@ -42,46 +39,35 @@ void Game::init(const char *title, int xPos, int yPos, int width, int height, bo
 
         isRunning = true;
     }
-    
-    player = new GameObj("assets/player.png", renderer, 10, 10, 5); 
-    
+
+    player = new Player("assets/player.png", renderer, 10, 10, 5);
+
     //SDL_Surface* tmpSurface = IMG_Load("assets/player.png");     		//loading a surface
     //playerTexture = SDL_CreateTextureFromSurface(renderer, tmpSurface);	//creating texture from surface
     //SDL_FreeSurface(tmpSurface);						//cleaning the surface
-    
+
 }
 
 void Game::handleEvents(){
-    
-   
-    
+
     SDL_PollEvent(&event);
     switch(event.type){
         case SDL_QUIT:
             isRunning = false; break;
-            
-        case SDL_KEYDOWN:
-             switch( event.key.keysym.sym) {
-             	case SDLK_LEFT: player -> addX(player -> getSpeed()); break;
-             	case SDLK_RIGHT: player -> addX(player -> getSpeed()); break;
-             	case SDLK_UP: player -> addY(player -> getSpeed()); break;
-             	case SDLK_DOWN: player -> addY(player -> getSpeed()); break;
-             	default: break;
-             }
 
         default: break;
     }
 }
 
 void Game::update(){
-	player -> update();
+    player -> update();
 }
 
 void Game::render(){
-    SDL_RenderClear(renderer); 
-    
+    SDL_RenderClear(renderer);
+
     player -> render();
-    
+
     SDL_RenderPresent(renderer);
 
 
