@@ -25,6 +25,8 @@ void Game::init(const char *title, int xPos, int yPos, int width, int height, bo
     if(SDL_Init(SDL_INIT_EVERYTHING) == 0){
         std::cout << "SDL Initialized.." << std::endl;
 
+        SDL_SetHint( SDL_HINT_RENDER_SCALE_QUALITY, "1" ); //set "antialiasing" on -> smoother edges
+
         window = SDL_CreateWindow(title, xPos, yPos, width, height, flags);
 
         if(window){

@@ -20,6 +20,7 @@ private:
     //Rectangle for collision checking -> if(bulletRect intersects object) do_sth();
     SDL_Rect rect;
     SDL_Renderer* renderer;
+    SDL_Texture* objTexture;
 
     void updateRect();
 

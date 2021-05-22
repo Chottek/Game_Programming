@@ -1,9 +1,11 @@
 #include "Bullet.h"
 #include "cmath"
+#include "TextureLoader.h"
+#include "MathUtils.h"
 
 Bullet::Bullet(SDL_Renderer* ren, float initialX, float initialY, double direction) {
     renderer = ren;
-
+    objTexture = TextureLoader::loadTexture("assets/bullet.png", renderer);
     x = initialX;
     y = initialY;
     angle = direction;
@@ -33,8 +35,10 @@ void Bullet::update() {
 }
 
 void Bullet::render() {
-    SDL_SetRenderDrawColor(renderer,255, 255, 255, 255);
+ //   SDL_SetRenderDrawColor(renderer,255, 255, 255, 255);
     //@TODO: Set a texture to bullet, so it's transformable within given angle
-    SDL_RenderDrawRect(renderer, &rect);
-    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+
+    SDL_RenderCopyEx(renderer, objTexture, nullptr, &rect, MathUtils::toDegrees(angle), nullptr, SDL_FLIP_NONE);
+   // SDL_RenderDrawRect(renderer, &rect);
+    //SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
 }
