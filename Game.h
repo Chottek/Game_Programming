@@ -1,16 +1,11 @@
-//
-// Created by chotek on 21.05.2021.
-//
-
 #ifndef GEOMETRICWARS_GAME_H
 #define GEOMETRICWARS_GAME_H
-
-
 #pragma once
 
 #include "SDL2/SDL.h"
 #include "SDL2/SDL_image.h"
 #include <iostream>
+#include <SDL2/SDL_ttf.h>
 
 class Game {
 

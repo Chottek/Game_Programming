@@ -1,7 +1,7 @@
 #ifndef GEOMETRICWARS_BULLET_H
 #define GEOMETRICWARS_BULLET_H
 
-#include "Game.h"
+#include "../Game.h"
 
 class Bullet {
 

@@ -1,8 +1,11 @@
 
 #include "Game.h"
-#include "Player.h"
+#include "field/Player.h"
+#include "utils/FontUtils.h"
 
 Player* player;
+TTF_Font* computo20;
+
 SDL_Event Game::event;
 
 Game::Game(){
@@ -25,6 +28,10 @@ void Game::init(const char *title, int xPos, int yPos, int width, int height, bo
     if(SDL_Init(SDL_INIT_EVERYTHING) == 0){
         std::cout << "SDL Initialized.." << std::endl;
 
+        if(TTF_Init() == 0){
+            std::cout << "TTF Fonts library initialized..." << std::endl;
+        }//initialising TTF Font library
+
         SDL_SetHint( SDL_HINT_RENDER_SCALE_QUALITY, "1" ); //set "antialiasing" on -> smoother edges
 
         window = SDL_CreateWindow(title, xPos, yPos, width, height, flags);
@@ -42,12 +49,8 @@ void Game::init(const char *title, int xPos, int yPos, int width, int height, bo
         isRunning = true;
     }
 
-    player = new Player("assets/player.png", renderer, 10.0F, 10.0F, 5.0F);
-
-    //SDL_Surface* tmpSurface = IMG_Load("assets/player.png");     		//loading a surface
-    //playerTexture = SDL_CreateTextureFromSurface(renderer, tmpSurface);	//creating texture from surface
-    //SDL_FreeSurface(tmpSurface);						//cleaning the surface
-
+    player = new Player(renderer, 10.0F, 10.0F, 5.0F);
+    computo20 = FontUtils::loadFont("assets/computo-monospace.otf", 20);
 }
 
 void Game::handleEvents(){
@@ -68,16 +71,16 @@ void Game::update(){
 void Game::render(){
     SDL_RenderClear(renderer);
 
+    FontUtils::drawString(computo20, renderer, {255, 200, 100}, "Hello There");
     player -> render();
 
     SDL_RenderPresent(renderer);
-
-
 }
 
 void Game::clean(){
     SDL_DestroyWindow(window);
     SDL_DestroyRenderer(renderer);
+    TTF_Quit();
     SDL_Quit();
     std::cout << "Game cleaned" << std::endl;
 }

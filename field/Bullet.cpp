@@ -1,7 +1,7 @@
 #include "Bullet.h"
 #include "cmath"
-#include "TextureLoader.h"
-#include "MathUtils.h"
+#include "../utils/TextureLoader.h"
+#include "../utils/MathUtils.h"
 
 Bullet::Bullet(SDL_Renderer* ren, float initialX, float initialY, double direction) {
     renderer = ren;
@@ -15,8 +15,6 @@ Bullet::Bullet(SDL_Renderer* ren, float initialX, float initialY, double directi
     rect.y = (int) y;
     rect.w = 10;
     rect.h = 5;
-
-    std::cout << "New bullet fired" << std::endl;
 
     age = 0;
 }
@@ -35,10 +33,7 @@ void Bullet::update() {
 }
 
 void Bullet::render() {
- //   SDL_SetRenderDrawColor(renderer,255, 255, 255, 255);
-    //@TODO: Set a texture to bullet, so it's transformable within given angle
-
+    //const SDL_Point point = {(int) x + 4, (int) y + 4}; -> &point
+    //TODO: Figure a point to transform bullet properly around player ship
     SDL_RenderCopyEx(renderer, objTexture, nullptr, &rect, MathUtils::toDegrees(angle), nullptr, SDL_FLIP_NONE);
-   // SDL_RenderDrawRect(renderer, &rect);
-    //SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
 }

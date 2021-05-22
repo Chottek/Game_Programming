@@ -1,5 +1,5 @@
 #include "GameObj.h"
-#include "TextureLoader.h"
+#include "../utils/TextureLoader.h"
 
 GameObj::GameObj(const char* textures, SDL_Renderer* ren, int x, int y, int speed){
     renderer = ren;

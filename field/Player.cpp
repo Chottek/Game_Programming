@@ -1,10 +1,12 @@
 #include "Player.h"
-#include "TextureLoader.h"
-#include "MathUtils.h"
+#include "../utils/TextureLoader.h"
+#include "../utils/MathUtils.h"
 
-Player::Player(const char* textures, SDL_Renderer* ren, float xPos, float yPos, float spd){
+Player::Player(SDL_Renderer* ren, float xPos, float yPos, float spd){
     renderer = ren;
-    objTexture = TextureLoader::loadTexture(textures, ren);
+    objTexture = TextureLoader::loadTexture("assets/player.png", ren);
+
+    defaultShootCoolDown = 10; //10 ticks
 
     x = xPos;
     y = yPos;
@@ -47,20 +49,21 @@ void Player::update(){
     destRect.w = srcRect.w;
     destRect.h = srcRect.h;
 
+    if(shootCoolDown < defaultShootCoolDown){
+        shootCoolDown++;
+    }
+
 }
 
 void Player::render(){
     //SDL_RenderCopy(renderer, objTexture, nullptr, &destRect);
+    //const SDL_Point point = {(int) x + 16, (int) y + 16};
     SDL_RenderCopyEx(renderer, objTexture, nullptr, &destRect, MathUtils::toDegrees(angle), nullptr, SDL_FLIP_NONE);
 
     for (auto const& i : bullets) {
         i->render();
     }
 
-}
-
-void Player::fire(){
-    bullets.push_back(new Bullet(renderer, x + destRect.w, y + destRect.h / 2, angle));
 }
 
 void Player::getInput() {
@@ -126,7 +129,14 @@ void Player::move(){
         angle += 0.1;
     }
     if(shooting){
-        std::cout << "PIF PAF" << std::endl;
         fire();
+    }
+}
+
+
+void Player::fire(){
+    if(shootCoolDown >= defaultShootCoolDown){
+        bullets.push_back(new Bullet(renderer, x, y, angle));
+        shootCoolDown = 0;
     }
 }

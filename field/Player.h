@@ -2,12 +2,12 @@
 #define GEOMETRICWARS_PLAYER_H
 
 #include <list>
-#include "Game.h"
+#include "../Game.h"
 #include "Bullet.h"
 
 class Player {
 public:
-    Player(const char* textures, SDL_Renderer* renderer, float xPos, float yPos, float spd);
+    Player(SDL_Renderer* renderer, float xPos, float yPos, float spd);
     ~Player();
 
     void update();
@@ -30,6 +30,9 @@ private:
     float speed;
     double angle;
     double lastAngle;
+
+    int defaultShootCoolDown;
+    int shootCoolDown;
 
     bool isMovingForward;
     float brakingPower, speedingPower;
