@@ -140,3 +140,11 @@ void Player::fire(){
         shootCoolDown = 0;
     }
 }
+
+float Player::getX() {
+    return x;
+}
+
+float Player::getY(){
+    return y;
+}

@@ -1,10 +1,12 @@
 
+#include <sstream>
 #include "Game.h"
 #include "field/Player.h"
 #include "utils/FontUtils.h"
 
 Player* player;
-TTF_Font* computo20;
+TTF_Font* alien20;
+TTF_Font* alien10;
 
 SDL_Event Game::event;
 
@@ -32,7 +34,7 @@ void Game::init(const char *title, int xPos, int yPos, int width, int height, bo
             std::cout << "TTF Fonts library initialized..." << std::endl;
         }//initialising TTF Font library
 
-        SDL_SetHint( SDL_HINT_RENDER_SCALE_QUALITY, "1" ); //set "antialiasing" on -> smoother edges
+        SDL_SetHint( SDL_HINT_RENDER_SCALE_QUALITY, "1"); //set "antialiasing" on -> smoother edges
 
         window = SDL_CreateWindow(title, xPos, yPos, width, height, flags);
 
@@ -50,7 +52,8 @@ void Game::init(const char *title, int xPos, int yPos, int width, int height, bo
     }
 
     player = new Player(renderer, 10.0F, 10.0F, 5.0F);
-    computo20 = FontUtils::loadFont("assets/computo-monospace.otf", 20);
+    alien20 = FontUtils::loadFont("assets/CAlien.ttf", 20);
+    alien10 = FontUtils::loadFont("assets/CAlien.ttf", 10);
 }
 
 void Game::handleEvents(){
@@ -70,8 +73,9 @@ void Game::update(){
 
 void Game::render(){
     SDL_RenderClear(renderer);
-
-    FontUtils::drawString(computo20, renderer, {255, 200, 100}, "Hello There");
+    std::stringstream ss;
+    ss << "X: " << player -> getX() << ", Y: " << player -> getY();
+    FontUtils::drawString(alien10, renderer, {255, 0, 0}, ss.str().c_str(), 10, 10);
     player -> render();
 
     SDL_RenderPresent(renderer);

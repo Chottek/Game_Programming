@@ -13,6 +13,9 @@ public:
     void update();
     void render();
 
+    float getX();
+    float getY();
+
     std::list<Bullet*> bullets;
 
 private:

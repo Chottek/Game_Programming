@@ -9,7 +9,7 @@ class FontUtils {
 public:
     static TTF_Font* loadFont(const char* fileName, int size);
 
-    static SDL_Texture* drawString(TTF_Font* font, SDL_Renderer* renderer, SDL_Color color, const char *text);
+    static void drawString(TTF_Font* font, SDL_Renderer* renderer, SDL_Color color, const char *text, int x, int y);
 };
 
 
