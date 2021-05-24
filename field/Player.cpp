@@ -22,8 +22,6 @@ void Player::update(){
     getInput();
     move();
 
-    std::cout << bullets.size() << std::endl;
-
     for (auto const& i : bullets) {
          i->update();
 //         if(i->age > 500){

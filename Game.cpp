@@ -3,6 +3,7 @@
 #include "Game.h"
 #include "field/Player.h"
 #include "utils/FontUtils.h"
+#include "GameHandler.h"
 
 Player* player;
 TTF_Font* alien20;
@@ -10,16 +11,15 @@ TTF_Font* alien10;
 
 SDL_Event Game::event;
 
+GameHandler * handler;
+
 Game::Game(){
-
-
-}
-Game::~Game(){
-
-
+    Game *g = this;
+    handler = new GameHandler(reinterpret_cast<Game *>(&g));  //TODO: Figure out if that's it ASAP
 }
 
 void Game::init(const char *title, int xPos, int yPos, int width, int height, bool isFullScreen){
+    std::cout << &handler << std::endl;
 
     const int flags = 0;
 
