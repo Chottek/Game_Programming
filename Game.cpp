@@ -4,10 +4,10 @@
 #include "field/Player.h"
 #include "utils/FontUtils.h"
 #include "GameHandler.h"
+#include "field/Field.h"
 
-Player* player;
-TTF_Font* alien20;
-TTF_Font* alien10;
+
+Field* field;
 
 SDL_Event Game::event;
 
@@ -51,9 +51,7 @@ void Game::init(const char *title, int xPos, int yPos, int width, int height, bo
         isRunning = true;
     }
 
-    player = new Player(renderer, 10.0F, 10.0F, 5.0F);
-    alien20 = FontUtils::loadFont("assets/CAlien.ttf", 20);
-    alien10 = FontUtils::loadFont("assets/CAlien.ttf", 10);
+    field = new Field(renderer);
 }
 
 void Game::handleEvents(){
@@ -68,15 +66,13 @@ void Game::handleEvents(){
 }
 
 void Game::update(){
-    player -> update();
+   field -> update();
 }
 
 void Game::render(){
     SDL_RenderClear(renderer);
-    std::stringstream ss;
-    ss << "X: " << player -> getX() << ", Y: " << player -> getY();
-    FontUtils::drawString(alien10, renderer, {255, 0, 0}, ss.str().c_str(), 10, 10);
-    player -> render();
+
+    field -> render();
 
     SDL_RenderPresent(renderer);
 }

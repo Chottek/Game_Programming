@@ -1,21 +1,29 @@
+#include <sstream>
 #include "Player.h"
 #include "../utils/TextureLoader.h"
 #include "../utils/MathUtils.h"
+#include "../utils/FontUtils.h"
+
+TTF_Font * font;
 
 Player::Player(SDL_Renderer* ren, float xPos, float yPos, float spd){
     renderer = ren;
     objTexture = TextureLoader::loadTexture("assets/player.png", ren);
 
-    defaultShootCoolDown = 10; //10 ticks
+    defaultShootCoolDown = 10;
+    life = 100;
 
     x = xPos;
     y = yPos;
     speed = spd;
 
+
     angle = 0.1;
 
     fwd = back = left = right = false;
     isAlive = true;
+
+    font = FontUtils::loadFont("assets/CAlien.ttf", 12);
 }
 
 void Player::update(){
@@ -24,9 +32,6 @@ void Player::update(){
 
     for (auto const& i : bullets) {
          i->update();
-//         if(i->age > 500){
-//             bullets.remove(i); //Deal with ConcurrentModificationException here
-//         }
     }
 
 //    auto i = bullets.begin();
@@ -37,15 +42,10 @@ void Player::update(){
 //        }
 //    }
 
-    srcRect.w = 32;
-    srcRect.h = 32;
-    srcRect.x = 0;
-    srcRect.y = 0;
-
     destRect.x = (int) x;
     destRect.y = (int) y;
-    destRect.w = srcRect.w;
-    destRect.h = srcRect.h;
+    destRect.w = 32;
+    destRect.h = 32;
 
     if(shootCoolDown < defaultShootCoolDown){
         shootCoolDown++;
@@ -54,17 +54,24 @@ void Player::update(){
 }
 
 void Player::render(){
-    //SDL_RenderCopy(renderer, objTexture, nullptr, &destRect);
-    //const SDL_Point point = {(int) x + 16, (int) y + 16};
+
+    { //Drawing String with life
+        std::stringstream ss;
+        ss << "Life: " << life << "%";
+        FontUtils::drawString(font, renderer, {0, 200, 100}, ss.str().c_str(), 700, 10);
+        ss.str("");
+        ss << "X: " << x << ", Y: " << y;
+        FontUtils::drawString(font, renderer, {255, 0, 0}, ss.str().c_str(), 10, 10);
+    }
+
     SDL_RenderCopyEx(renderer, objTexture, nullptr, &destRect, MathUtils::toDegrees(angle), nullptr, SDL_FLIP_NONE);
 
-    for (auto const& i : bullets) {
-        i->render();
-    }
+    for (auto const& i : bullets) { i->render(); }
 
 }
 
 void Player::getInput() {
+
     const Uint8* key_state = SDL_GetKeyboardState(nullptr);
 
     if (key_state[SDL_SCANCODE_W] || key_state[SDL_SCANCODE_UP]){

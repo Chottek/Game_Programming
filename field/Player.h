@@ -27,6 +27,7 @@ private:
 
     bool fwd, back, left, right, shooting;
     bool isAlive;
+    int life;
 
     float x;
     float y;
