@@ -5,10 +5,12 @@
 #include "../utils/FontUtils.h"
 
 TTF_Font * font;
+int bulletTicks; //Time before bullet dissapears
 
 Player::Player(SDL_Renderer* ren, float xPos, float yPos, float spd){
     renderer = ren;
     objTexture = TextureLoader::loadTexture("assets/player.png", ren);
+    bulletTicks = 100;
 
     defaultShootCoolDown = 10;
     life = 100;
@@ -17,13 +19,15 @@ Player::Player(SDL_Renderer* ren, float xPos, float yPos, float spd){
     y = yPos;
     speed = spd;
 
-
     angle = 0.1;
 
     fwd = back = left = right = false;
     isAlive = true;
 
     font = FontUtils::loadFont("assets/CAlien.ttf", 12);
+
+    destRect.w = 32;
+    destRect.h = 32;
 }
 
 void Player::update(){
@@ -34,22 +38,22 @@ void Player::update(){
          i->update();
     }
 
-//    auto i = bullets.begin();
-//    while (i != bullets.end()){
-//        (*i)->update();
-//        if ((*i) -> age > 10000){
-//            bullets.erase(i++);  // alternatively, i = items.erase(i);
-//        }
-//    }
+    auto it = bullets.begin();
+    while (it != bullets.end()) {
+        if ((*it)->age > bulletTicks) { //ticks until bullet gets destroyed
+            it = bullets.erase(it);
+        } else
+            it++;
+    }
 
     destRect.x = (int) x;
     destRect.y = (int) y;
-    destRect.w = 32;
-    destRect.h = 32;
 
     if(shootCoolDown < defaultShootCoolDown){
         shootCoolDown++;
     }
+
+    //TODO: add sound of shooting using SDL_Mixer
 
 }
 
