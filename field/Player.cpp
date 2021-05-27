@@ -26,28 +26,26 @@ Player::Player(SDL_Renderer* ren, float xPos, float yPos, float spd){
 
     font = FontUtils::loadFont("assets/CAlien.ttf", 12);
 
-    destRect.w = 32;
-    destRect.h = 32;
+    bounds.w = 32;
+    bounds.h = 32;
 }
 
 void Player::update(){
     getInput();
     move();
 
-    for (auto const& i : bullets) {
-         i->update();
-    }
-
     auto it = bullets.begin();
     while (it != bullets.end()) {
+        (*it) -> update();
+
         if ((*it)->age > bulletTicks) { //ticks until bullet gets destroyed
             it = bullets.erase(it);
         } else
             it++;
     }
 
-    destRect.x = (int) x;
-    destRect.y = (int) y;
+    bounds.x = (int) x;
+    bounds.y = (int) y;
 
     if(shootCoolDown < defaultShootCoolDown){
         shootCoolDown++;
@@ -68,7 +66,7 @@ void Player::render(){
         FontUtils::drawString(font, renderer, {255, 0, 0}, ss.str().c_str(), 10, 10);
     }
 
-    SDL_RenderCopyEx(renderer, objTexture, nullptr, &destRect, MathUtils::toDegrees(angle), nullptr, SDL_FLIP_NONE);
+    SDL_RenderCopyEx(renderer, objTexture, nullptr, &bounds, MathUtils::toDegrees(angle), nullptr, SDL_FLIP_NONE);
 
     for (auto const& i : bullets) { i->render(); }
 

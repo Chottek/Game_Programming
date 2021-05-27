@@ -1,11 +1,9 @@
-
 #include <sstream>
 #include "Game.h"
 #include "field/Player.h"
 #include "utils/FontUtils.h"
 #include "GameHandler.h"
 #include "field/Field.h"
-
 
 Field* field;
 
@@ -23,16 +21,10 @@ void Game::init(const char *title, int xPos, int yPos, int width, int height, bo
 
     const int flags = 0;
 
-    //if(isFullScreen){
-    //    flags = SDL_WINDOW_FULLSCREEN;
-    // }
-
     if(SDL_Init(SDL_INIT_EVERYTHING) == 0){
-        std::cout << "SDL Initialized.." << std::endl;
+        std::cout << "SDL Initialized..." << std::endl;
 
-        if(TTF_Init() == 0){
-            std::cout << "TTF Fonts library initialized..." << std::endl;
-        }//initialising TTF Font library
+        if(TTF_Init() == 0){std::cout << "TTF Fonts library initialized..." << std::endl; }  //Initializing TTF font library
 
         SDL_SetHint( SDL_HINT_RENDER_SCALE_QUALITY, "1"); //set "antialiasing" on -> smoother edges
 
@@ -47,7 +39,6 @@ void Game::init(const char *title, int xPos, int yPos, int width, int height, bo
             SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255); //setting drawing color to RGB(255,255,255)
             std::cout << "Renderer initialized..." << std::endl;
         }
-
         isRunning = true;
     }
 

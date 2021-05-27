@@ -42,7 +42,7 @@ private:
     float brakingPower, speedingPower;
 
     SDL_Texture* objTexture;
-    SDL_Rect srcRect, destRect;
+    SDL_Rect bounds;
     SDL_Renderer* renderer;
 
 };
