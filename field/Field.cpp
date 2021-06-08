@@ -12,6 +12,10 @@ Camera* camera;
 Player* player;
 std::list<Enemy*> enemies;
 
+Field::~Field(){
+
+}
+
 Field::Field(SDL_Renderer* ren) {
     renderer = ren;
 
@@ -34,17 +38,21 @@ void Field::update() {
     camera -> center(player->getX(), player->getY(), player->getWidth(), player->getHeight());
     player -> setCameraOffsets(camera->getXOffset(), camera->getYOffset());
 
-//    for(auto e: enemies){
-//        e -> update();
-//        e -> setCameraOffsets(camera->getXOffset(), camera->getYOffset());
-//        e -> updateAngle(player-> getX(), player-> getY());
-//    }
-
     auto it = enemies.begin();
     while (it != enemies.end()) {
         (*it) -> update();
         (*it) -> setCameraOffsets(camera -> getXOffset(), camera -> getYOffset());
-        (*it) ->updateAngle(player -> getX(), player->getY());
+        (*it) -> updateAngle(player -> getX(), player->getY());
+
+        auto bullit = ((*it) -> bullets.begin());
+        while (bullit != ((*it) -> bullets.end())) {
+            (*bullit) -> update();
+
+            if (SDL_HasIntersection(&(*bullit)->getRect(), &player->getBounds()) == SDL_TRUE) {
+                player->subLife((*bullit)->getDamage());
+                bullit = ((*it) -> bullets).erase(bullit);
+            } else bullit++;
+        }
         it++;
     }
 

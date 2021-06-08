@@ -14,13 +14,32 @@ public:
 
     int age;
 
+    float getX() const;
+
+    float getY() const;
+
+    void setOffsets(float xOff, float yOff){
+        xOffset = xOff;
+        yOffset = yOff;
+    }
+
+    int getDamage() const;
+
+    double getAngle() const;
+    const SDL_Rect &getRect() const;
+
 private:
     float x, y, speed;
+    float xOffset, yOffset;
     double angle;
     //Rectangle for collision checking -> if(bulletRect intersects object) do_sth();
     SDL_Rect rect;
+
+private:
     SDL_Renderer* renderer;
     SDL_Texture* objTexture;
+
+    int damage;
 
     void updateRect();
 

@@ -60,6 +60,7 @@ void Game::clean(){
     SDL_DestroyRenderer(renderer);
     TTF_Quit();
     SDL_Quit();
+    delete field;
     std::cout << "Game cleaned" << std::endl;
 }
 

@@ -12,6 +12,7 @@ Bullet::Bullet(SDL_Renderer* ren, float initialX, float initialY, double directi
     y = initialY;
     angle = direction;
     speed = 10;
+    damage = 7;
 
     rect.x = (int) x;
     rect.y = (int) y;
@@ -25,8 +26,8 @@ Bullet::Bullet(SDL_Renderer* ren, float initialX, float initialY, double directi
 }
 
 void Bullet::updateRect() {
-    rect.x = (int) x;
-    rect.y = (int) y;
+    rect.x = (int) (x - xOffset);
+    rect.y = (int) (y - yOffset);
 }
 
 void Bullet::update() {
@@ -39,6 +40,26 @@ void Bullet::update() {
 
 void Bullet::render() {
     //const SDL_Point point = {(int) x + 4, (int) y + 4}; -> &point
-    //TODO: Figure a point to transform bullet properly around player ship
+    //TODO: Figure a point to transform bullet properly around ship
     SDL_RenderCopyEx(renderer, objTexture, nullptr, &rect, MathUtils::toDegrees(angle), nullptr, SDL_FLIP_NONE);
+}
+
+float Bullet::getX() const {
+    return x;
+}
+
+float Bullet::getY() const {
+    return y;
+}
+
+double Bullet::getAngle() const {
+    return angle;
+}
+
+const SDL_Rect &Bullet::getRect() const {
+    return rect;
+}
+
+int Bullet::getDamage() const {
+    return damage;
 }

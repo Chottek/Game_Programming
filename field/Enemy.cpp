@@ -47,8 +47,7 @@ void Enemy::update() {
 
         if ((*it)->age > bulletTick) { //ticks until bullet gets destroyed
             it = bullets.erase(it);
-        } else
-            it++;
+        } else it++;
     }
 }
 

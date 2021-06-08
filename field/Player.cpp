@@ -64,7 +64,7 @@ void Player::render(){
     { //Drawing String with life
         std::stringstream ss;
         ss << "Life: " << life << "%";
-        FontUtils::drawString(font, renderer, {0, 200, 100}, ss.str().c_str(), 700, 10);
+        FontUtils::drawString(font, renderer, {(Uint8) (200 - 2 * life), (Uint8) (life * 2), (Uint8) (life / 2)}, ss.str().c_str(), 700, 10);
         ss.str("");
         ss << "X: " << x << ", Y: " << y;
         FontUtils::drawString(font, renderer, {255, 0, 0}, ss.str().c_str(), 10, 10);
@@ -183,5 +183,9 @@ int Player::getHeight() const {
 void Player::setCameraOffsets(float offX, float offY) {
     Player::cameraOffsetX = offX;
     Player::cameraOffsetY = offY;
+}
+
+const SDL_Rect &Player::getBounds() const {
+    return bounds;
 }
 

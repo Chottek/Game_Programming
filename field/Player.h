@@ -22,13 +22,27 @@ public:
 
     void setCameraOffsets(float offX, float offY);
 
-
-
     std::list<Bullet*> bullets;
 
     int getWidth() const;
 
     int getHeight() const;
+
+    const SDL_Rect &getBounds() const;
+
+    void setBounds(const SDL_Rect &bounds);
+
+    void addLife(int l){
+        Player::life += l;
+    }
+
+    void subLife(int l){
+        Player::life -= l;
+
+        if(Player::life < 0){
+            Player::life = 0;
+        }
+    }
 
 private:
     void move();
@@ -57,6 +71,7 @@ private:
     float cameraOffsetX, cameraOffsetY;
 
     int width, height;
+
 
     SDL_Texture* objTexture;
     SDL_Rect bounds;
