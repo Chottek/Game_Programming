@@ -46,14 +46,24 @@ void Field::update() {
 
         auto bullit = ((*it) -> bullets.begin());
         while (bullit != ((*it) -> bullets.end())) {
-            (*bullit) -> update();
-
             if (SDL_HasIntersection(&(*bullit)->getRect(), &player->getBounds()) == SDL_TRUE) {
                 player->subLife((*bullit)->getDamage());
                 bullit = ((*it) -> bullets).erase(bullit);
             } else bullit++;
         }
-        it++;
+
+        auto plbullit = (player->bullets.begin());
+        while (plbullit != (player -> bullets.end())) {
+            if (SDL_HasIntersection(&(*plbullit)->getRect(), &(*it)->getBounds()) == SDL_TRUE) {
+                (*it)->subLife((*plbullit)->getDamage());
+                plbullit = (player-> bullets).erase(plbullit);
+            } else plbullit++;
+        }
+
+        if((*it) -> getLife() <= 0){
+            player->addScore((*it) -> getBounty());
+            it = enemies.erase(it);
+        }else it++;
     }
 
 }

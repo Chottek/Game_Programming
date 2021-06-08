@@ -18,6 +18,7 @@ Enemy::Enemy(SDL_Renderer *ren, float x, float y, int type) {
             life = 10;
             speed = 2.0F;
             defaultShootCoolDown = 70;
+            bounty = life;
             break;
         }
     }
@@ -99,6 +100,22 @@ void Enemy::fire() {
     }
 
     shootCoolDown++;
+}
+
+const SDL_Rect &Enemy::getBounds() const {
+    return bounds;
+}
+
+bool Enemy::isDead1() const {
+    return isDead;
+}
+
+int Enemy::getLife() const {
+    return life;
+}
+
+int Enemy::getBounty() const {
+    return bounty;
 }
 
 

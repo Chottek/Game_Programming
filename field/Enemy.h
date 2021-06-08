@@ -31,13 +31,37 @@ public:
 
     std::list<Bullet*> bullets;
 
+    const SDL_Rect &getBounds() const;
+
+    void addLife(int l){
+        Enemy::life += l;
+    }
+
+    void subLife(int l){
+        Enemy::life -= l;
+
+        if(Enemy::life < 0){
+            Enemy::life = 0;
+            Enemy::isDead = true;
+        }
+    }
+
+    bool isDead1() const;
+
+    int getLife() const;
+
+    int getBounty() const;
+
 private:
     float x, y, speed;
     double angle;
     int type;
     int life;
+    int bounty; //score
 
     int width, height;
+
+    bool isDead;
 
     int defaultShootCoolDown;
     int shootCoolDown;

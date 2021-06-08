@@ -44,6 +44,10 @@ public:
         }
     }
 
+    void addScore(int s){
+        Player::score += s;
+    }
+
 private:
     void move();
 
