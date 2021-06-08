@@ -12,19 +12,41 @@ Enemy::Enemy(SDL_Renderer *ren, float x, float y, int type) {
 
     bulletTick = 100;
 
+    bounds.x = (int) x;
+    bounds.y = (int) y;
+
     switch(type){
         case 0:{
-            objTexture = TextureLoader::loadTexture("assets/player.png", ren);
+            objTexture = TextureLoader::loadTexture("assets/enemy1.png", ren);
             life = 10;
+            speed = 4.0F;
+            defaultShootCoolDown = 50;
+            bounty = life;
+            bounds.w = 30;
+            bounds.h = 27;
+            break;
+        }
+        case 1:{
+            objTexture = TextureLoader::loadTexture("assets/enemy2.png", ren);
+            life = 30;
             speed = 2.0F;
             defaultShootCoolDown = 70;
-            bounty = life;
+            bounty = life * 2;
+            bounds.w = 32;
+            bounds.h = 32;
             break;
+        }
+        case 2:{
+            objTexture = TextureLoader::loadTexture("assets/enemy3.png", ren);
+            life = 40;
+            speed = 4.5F;
+            defaultShootCoolDown = 50;
+            bounty = life * 3;
+            bounds.w = 30;
+            bounds.h = 18;
         }
     }
 
-    bounds.x = (int) x;
-    bounds.y = (int) y;
     bounds.w = 32;
     bounds.h = 32;
 
@@ -39,7 +61,7 @@ Enemy::Enemy(SDL_Renderer *ren, float x, float y, int type) {
 
 void Enemy::update() {
     updatePosition();
-
+    pushBack();
     fire();
 
     auto it = bullets.begin();
@@ -116,6 +138,20 @@ int Enemy::getLife() const {
 
 int Enemy::getBounty() const {
     return bounty;
+}
+
+void Enemy::setPushBack(int bulletPower, double angl) {
+    pushback = bulletPower;
+    pushbackAngle = angl;
+}
+
+void Enemy::pushBack() {
+    if(pushback > 0){
+        x += pushback * cos(pushbackAngle);
+        y += pushback * sin(pushbackAngle);
+
+        pushback -= 0.5;
+    }
 }
 
 

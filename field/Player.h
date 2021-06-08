@@ -28,6 +28,10 @@ public:
 
     int getHeight() const;
 
+    void setPushBack(int bulletPower, double angl);
+
+    void pushBack();
+
     const SDL_Rect &getBounds() const;
 
     void setBounds(const SDL_Rect &bounds);
@@ -63,7 +67,9 @@ private:
     float x;
     float y;
     float speed;
-    double angle;
+    double angle, pushbackAngle;
+    float pushback;
+
     double lastAngle;
 
     int defaultShootCoolDown;
@@ -75,7 +81,6 @@ private:
     float cameraOffsetX, cameraOffsetY;
 
     int width, height;
-
 
     SDL_Texture* objTexture;
     SDL_Rect bounds;

@@ -1,0 +1,11 @@
+#ifndef GEOMETRICWARS_PARTICLESYSTEM_H
+#define GEOMETRICWARS_PARTICLESYSTEM_H
+
+#include "Particle.h"
+
+class ParticleSystem {
+
+};
+
+
+#endif //GEOMETRICWARS_PARTICLESYSTEM_H

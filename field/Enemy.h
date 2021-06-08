@@ -52,9 +52,14 @@ public:
 
     int getBounty() const;
 
+    void setPushBack(int bulletPower, double angl);
+
+    void pushBack();
+
 private:
     float x, y, speed;
-    double angle;
+    double angle, pushbackAngle;
+    float pushback;
     int type;
     int life;
     int bounty; //score

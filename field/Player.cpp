@@ -31,13 +31,14 @@ Player::Player(SDL_Renderer* ren, float xPos, float yPos, float spd){
 
     font = FontUtils::loadFont("assets/CAlien.ttf", 12);
 
-    bounds.w = 32;
-    bounds.h = 32;
+    bounds.w = 32; //61
+    bounds.h = 32; //55
 }
 
 void Player::update(){
     getInput();
     move();
+    pushBack();
 
     auto it = bullets.begin();
     while (it != bullets.end()) {
@@ -187,5 +188,19 @@ void Player::setCameraOffsets(float offX, float offY) {
 
 const SDL_Rect &Player::getBounds() const {
     return bounds;
+}
+
+void Player::setPushBack(int bulletPower, double angl) {
+        pushback = bulletPower;
+        pushbackAngle = angl;
+}
+
+void Player::pushBack() {
+    if(pushback > 0){
+        x += pushback * cos(pushbackAngle);
+        y += pushback * sin(pushbackAngle);
+
+        pushback -= 0.5;
+    }
 }
 
