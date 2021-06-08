@@ -17,6 +17,7 @@ Game::Game(){
 }
 
 void Game::init(const char *title, int xPos, int yPos, int width, int height, bool isFullScreen){
+
     std::cout << &handler << std::endl;
 
     const int flags = 0;

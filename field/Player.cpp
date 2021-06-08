@@ -12,7 +12,11 @@ Player::Player(SDL_Renderer* ren, float xPos, float yPos, float spd){
     objTexture = TextureLoader::loadTexture("assets/player.png", ren);
     bulletTicks = 100;
 
+    width = 64;
+    height = 64;
+
     defaultShootCoolDown = 10;
+    score = 0;
     life = 100;
 
     x = xPos;
@@ -44,15 +48,14 @@ void Player::update(){
             it++;
     }
 
-    bounds.x = (int) x;
-    bounds.y = (int) y;
+    bounds.x = (int) (x - cameraOffsetX);
+    bounds.y = (int) (y - cameraOffsetY);
 
     if(shootCoolDown < defaultShootCoolDown){
         shootCoolDown++;
     }
 
     //TODO: add sound of shooting using SDL_Mixer
-
 }
 
 void Player::render(){
@@ -64,6 +67,10 @@ void Player::render(){
         ss.str("");
         ss << "X: " << x << ", Y: " << y;
         FontUtils::drawString(font, renderer, {255, 0, 0}, ss.str().c_str(), 10, 10);
+
+        ss.str("");
+        ss << "Score: " << score;
+        FontUtils::drawString(font, renderer, {0, 0, 200}, ss.str().c_str(), 10, 585);
     }
 
     SDL_RenderCopyEx(renderer, objTexture, nullptr, &bounds, MathUtils::toDegrees(angle), nullptr, SDL_FLIP_NONE);
@@ -143,7 +150,7 @@ void Player::move(){
 
 void Player::fire(){
     if(shootCoolDown >= defaultShootCoolDown){
-        bullets.push_back(new Bullet(renderer, x, y, angle));
+        bullets.push_back(new Bullet(renderer, x - cameraOffsetX, y - cameraOffsetY, angle));
         shootCoolDown = 0;
     }
 }
@@ -155,3 +162,25 @@ float Player::getX() {
 float Player::getY(){
     return y;
 }
+
+float Player::getCameraOffsetX() const {
+    return cameraOffsetX;
+}
+
+float Player::getCameraOffsetY() const {
+    return cameraOffsetY;
+}
+
+int Player::getWidth() const {
+    return width;
+}
+
+int Player::getHeight() const {
+    return height;
+}
+
+void Player::setCameraOffsets(float offX, float offY) {
+    Player::cameraOffsetX = offX;
+    Player::cameraOffsetY = offY;
+}
+

@@ -1,7 +1,6 @@
 #ifndef GEOMETRICWARS_FIELD_H
 #define GEOMETRICWARS_FIELD_H
 
-
 #include "Player.h"
 
 class Field {

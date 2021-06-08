@@ -16,7 +16,19 @@ public:
     float getX();
     float getY();
 
+    float getCameraOffsetX() const;
+
+    float getCameraOffsetY() const;
+
+    void setCameraOffsets(float offX, float offY);
+
+
+
     std::list<Bullet*> bullets;
+
+    int getWidth() const;
+
+    int getHeight() const;
 
 private:
     void move();
@@ -28,6 +40,7 @@ private:
     bool fwd, back, left, right, shooting;
     bool isAlive;
     int life;
+    int score;
 
     float x;
     float y;
@@ -40,6 +53,10 @@ private:
 
     bool isMovingForward;
     float brakingPower, speedingPower;
+
+    float cameraOffsetX, cameraOffsetY;
+
+    int width, height;
 
     SDL_Texture* objTexture;
     SDL_Rect bounds;

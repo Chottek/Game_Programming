@@ -3,6 +3,8 @@
 #include "../utils/TextureLoader.h"
 #include "../utils/MathUtils.h"
 
+SDL_Point center;
+
 Bullet::Bullet(SDL_Renderer* ren, float initialX, float initialY, double direction) {
     renderer = ren;
     objTexture = TextureLoader::loadTexture("assets/bullet.png", renderer);
@@ -15,6 +17,9 @@ Bullet::Bullet(SDL_Renderer* ren, float initialX, float initialY, double directi
     rect.y = (int) y;
     rect.w = 10;
     rect.h = 5;
+
+//    center.x = rect.x + 32;
+//    center.y = rect.y + 32;
 
     age = 0;
 }
