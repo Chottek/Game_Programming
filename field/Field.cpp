@@ -1,9 +1,11 @@
 #include <sstream>
 #include "Field.h"
-#include "../Camera.h"
+#include "Camera.h"
+#include "Player.h"
+#include "Enemy.h"
 #include "../utils/FontUtils.h"
 #include "../utils/TextureLoader.h"
-#include "Enemy.h"
+
 
 TTF_Font* alien10;
 Camera* camera;
@@ -32,16 +34,19 @@ void Field::update() {
     camera -> center(player->getX(), player->getY(), player->getWidth(), player->getHeight());
     player -> setCameraOffsets(camera->getXOffset(), camera->getYOffset());
 
-    for(auto e: enemies){
-        e -> update();
-        e -> setCameraOffsets(camera->getXOffset(), camera->getYOffset());
-        e -> updateAngle(player-> getX(), player-> getY());
+//    for(auto e: enemies){
+//        e -> update();
+//        e -> setCameraOffsets(camera->getXOffset(), camera->getYOffset());
+//        e -> updateAngle(player-> getX(), player-> getY());
+//    }
+
+    auto it = enemies.begin();
+    while (it != enemies.end()) {
+        (*it) -> update();
+        (*it) -> setCameraOffsets(camera -> getXOffset(), camera -> getYOffset());
+        (*it) ->updateAngle(player -> getX(), player->getY());
+        it++;
     }
-//    auto it = enemies.begin();
-//    while (it != enemies.end()) {
-//        (*it) -> update();
-//        (*it) -> setCameraOffsets(camera -> getXOffset(), camera -> getYOffset());
-//    } //IT CRASHES GAME, DUNNO WHY :/
 
 }
 
@@ -50,6 +55,6 @@ void Field::render() {
 
     player->render();
 
-    for(auto e : enemies){ e->render(); }
+    for (auto const& e : enemies) { e -> render(); }
 }
 

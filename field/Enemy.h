@@ -1,8 +1,6 @@
 #ifndef GEOMETRICWARS_ENEMY_H
 #define GEOMETRICWARS_ENEMY_H
 
-
-#include <SDL_render.h>
 #include <list>
 #include "Bullet.h"
 

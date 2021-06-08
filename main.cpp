@@ -13,7 +13,7 @@ int main(int argc, const char * argv[]){
     Uint32 frameStart;
     int frameTime;
 
-    Game * game = new Game();
+    Game* game = new Game();
 
     game -> init(title, position, position, width, height, isFullScreen);
 

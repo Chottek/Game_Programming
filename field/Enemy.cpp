@@ -2,18 +2,22 @@
 #include "../utils/MathUtils.h"
 #include "../utils/TextureLoader.h"
 
+int bulletTick; //Time before bullet dissapears
+
 Enemy::Enemy(SDL_Renderer *ren, float x, float y, int type) {
     renderer = ren;
     Enemy::x = x;
     Enemy::y = y;
     Enemy::type = type;
 
+    bulletTick = 100;
+
     switch(type){
         case 0:{
             objTexture = TextureLoader::loadTexture("assets/player.png", ren);
             life = 10;
             speed = 2.0F;
-            defaultShootCoolDown = 50;
+            defaultShootCoolDown = 70;
             break;
         }
     }
@@ -37,8 +41,14 @@ void Enemy::update() {
 
     fire();
 
-    for(auto b: bullets){
-        b->update();
+    auto it = bullets.begin();
+    while (it != bullets.end()) {
+        (*it) -> update();
+
+        if ((*it)->age > bulletTick) { //ticks until bullet gets destroyed
+            it = bullets.erase(it);
+        } else
+            it++;
     }
 }
 
@@ -46,9 +56,7 @@ void Enemy::update() {
 void Enemy::render() {
     SDL_RenderCopyEx(renderer, objTexture, nullptr, &bounds, MathUtils::toDegrees(angle), nullptr, SDL_FLIP_NONE);
 
-    for(auto b: bullets){
-        b->render();
-    }
+    for (auto const& i : bullets) { i->render(); }
 }
 
 float Enemy::getX() const {

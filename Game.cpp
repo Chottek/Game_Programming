@@ -1,25 +1,11 @@
 #include <sstream>
 #include "Game.h"
-#include "field/Player.h"
-#include "utils/FontUtils.h"
-#include "GameHandler.h"
 #include "field/Field.h"
 
 Field* field;
-
 SDL_Event Game::event;
 
-GameHandler * handler;
-
-Game::Game(){
-    Game *g = this;
-    handler = new GameHandler(reinterpret_cast<Game *>(&g));  //TODO: Figure out if that's it ASAP
-}
-
 void Game::init(const char *title, int xPos, int yPos, int width, int height, bool isFullScreen){
-
-    std::cout << &handler << std::endl;
-
     const int flags = 0;
 
     if(SDL_Init(SDL_INIT_EVERYTHING) == 0){

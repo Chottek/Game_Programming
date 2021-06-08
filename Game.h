@@ -9,7 +9,9 @@
 class Game {
 
 public:
-    Game();
+    Game(){
+        std::cout << "Main Game Class initialized..." << std::endl;
+    }
     ~Game();
 
     void init(const char* title, int xPos, int yPos, int width, int height, bool isFullScreen);
