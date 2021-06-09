@@ -28,11 +28,14 @@ public:
     double getAngle() const;
     const SDL_Rect &getRect() const;
 
+    float getXOffset() const;
+
+    float getYOffset() const;
+
 private:
     float x, y, speed;
     float xOffset, yOffset;
     double angle;
-    //Rectangle for collision checking -> if(bulletRect intersects object) do_sth();
     SDL_Rect rect;
 
 private:

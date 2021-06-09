@@ -19,7 +19,7 @@ Enemy::Enemy(SDL_Renderer *ren, float x, float y, int type) {
         case 0:{
             objTexture = TextureLoader::loadTexture("assets/enemy1.png", ren);
             life = 10;
-            speed = 4.0F;
+            speed = 2.8F;
             defaultShootCoolDown = 50;
             bounty = life;
             bounds.w = 30;
@@ -39,33 +39,30 @@ Enemy::Enemy(SDL_Renderer *ren, float x, float y, int type) {
         case 2:{
             objTexture = TextureLoader::loadTexture("assets/enemy3.png", ren);
             life = 40;
-            speed = 4.5F;
+            speed = 2.5F;
             defaultShootCoolDown = 50;
             bounty = life * 3;
             bounds.w = 30;
-            bounds.h = 18;
+            bounds.h = 30;
+            break;
         }
     }
 
-    bounds.w = 32;
-    bounds.h = 32;
 
     //TODO: Change object texture depending on enemy type
 
-    angle = 0;
-
-    xOffset = x;
-    yOffset = y;
-
+    angle = 0.1;
 }
 
 void Enemy::update() {
     updatePosition();
     pushBack();
     fire();
+    move();
 
     auto it = bullets.begin();
     while (it != bullets.end()) {
+        (*it) -> setOffsets(xOffset, yOffset);
         (*it) -> update();
 
         if ((*it)->age > bulletTick) { //ticks until bullet gets destroyed
@@ -95,7 +92,8 @@ void Enemy::updatePosition() {
 }
 
 void Enemy::move() {
-
+    x += speed * cos(angle);
+    y += speed * sin(angle);
 }
 
 float Enemy::getXOffset() const {
@@ -112,12 +110,12 @@ float Enemy::getYOffset() const {
 }
 
 void Enemy::updateAngle(float playerX, float playerY) {
-    angle = atan2(y - (playerY + 10), x - (playerX + 10)) - PI;
+    angle = atan2(y - (playerY + 6), x - (playerX + 6)) - PI;
 }
 
 void Enemy::fire() {
     if(shootCoolDown >= defaultShootCoolDown){
-        bullets.push_back(new Bullet(renderer, x - xOffset, y - yOffset, angle));
+        bullets.push_back(new Bullet(renderer, x, y, angle));
         shootCoolDown = 0;
     }
 

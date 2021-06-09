@@ -1,0 +1,10 @@
+#ifndef GEOMETRICWARS_POINTSADD_H
+#define GEOMETRICWARS_POINTSADD_H
+
+
+class PointsAdd {
+
+};
+
+
+#endif //GEOMETRICWARS_POINTSADD_H

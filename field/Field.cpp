@@ -50,7 +50,7 @@ void Field::update() {
         while (bullit != ((*it) -> bullets.end())) {
             if (SDL_HasIntersection(&(*bullit)->getRect(), &player->getBounds()) == SDL_TRUE) {
                 player -> setPushBack((*bullit)->getDamage(), (*bullit) -> getAngle());
-                player->subLife((*bullit)->getDamage());
+                player -> subLife((*bullit)->getDamage());
                 bullit = ((*it) -> bullets).erase(bullit);
             } else bullit++;
         }

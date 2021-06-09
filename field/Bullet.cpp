@@ -26,8 +26,8 @@ Bullet::Bullet(SDL_Renderer* ren, float initialX, float initialY, double directi
 }
 
 void Bullet::updateRect() {
-    rect.x = (int) (x - xOffset);
-    rect.y = (int) (y - yOffset);
+    rect.x = (x - xOffset);
+    rect.y = (y - yOffset);
 }
 
 void Bullet::update() {
@@ -62,4 +62,12 @@ const SDL_Rect &Bullet::getRect() const {
 
 int Bullet::getDamage() const {
     return damage;
+}
+
+float Bullet::getXOffset() const {
+    return xOffset;
+}
+
+float Bullet::getYOffset() const {
+    return yOffset;
 }

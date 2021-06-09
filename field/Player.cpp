@@ -42,13 +42,23 @@ void Player::update(){
 
     auto it = bullets.begin();
     while (it != bullets.end()) {
-        (*it) -> update();
 
-        if ((*it)->age > bulletTicks) { //ticks until bullet gets destroyed
+        (*it) ->setOffsets(0, 0);
+
+        (*it) -> update();
+        std::cout << "PX: " << x
+        << ", PY: " << y << ", PXOFF: " << cameraOffsetX << ", PYOFF: " << cameraOffsetY
+        << ", BX: " << (*it) -> getX() << ", BY: " << (*it) -> getY() << ", BXOFF: " << (*it) -> getXOffset()
+        << ", BYOFF: " << (*it) -> getYOffset() << std::endl;
+
+
+        if ((*it) -> age > bulletTicks) { //ticks until bullet gets destroyed
             it = bullets.erase(it);
         } else
             it++;
     }
+
+    std::cout << "Player bulletz: " << bullets.size() << std::endl;
 
     bounds.x = (int) (x - cameraOffsetX);
     bounds.y = (int) (y - cameraOffsetY);
