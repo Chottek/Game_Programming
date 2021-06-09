@@ -2,7 +2,9 @@
 #include "Game.h"
 #include "field/Field.h"
 #include "./utils/TextureLoader.h"
+#include "./utils/FontUtils.h"
 #include "gfx/ParticleSystem.h"
+#include "field/Bullet.h"
 
 Field* field;
 SDL_Event Game::event;
@@ -17,7 +19,16 @@ SDL_Rect pauseBlackScreenRect;
 int pauseBlackScreenOpacity = 0;
 int startBlackScreenOpacity = 255;
 
+SDL_Texture * bcgTexture;
+
+SDL_Texture * logo;
+SDL_Rect logoBounds;
+
 ParticleSystem * particleSys;
+
+TTF_Font* alienStart;
+
+std::list<Bullet*> bullets;
 
 void Game::init(const char *title, int xPos, int yPos, int width, int height, bool isFullScreen){
     const int flags = 0;
@@ -47,6 +58,14 @@ void Game::init(const char *title, int xPos, int yPos, int width, int height, bo
 
     field = new Field(renderer);
 
+    bcgTexture = TextureLoader::loadTexture("assets/bcg.jpeg", renderer);
+
+    logo = TextureLoader::loadTexture("assets/logo.png", renderer);
+    logoBounds.w = 490;
+    logoBounds.h = 50;
+    logoBounds.x = width / 2 - (logoBounds.w / 2);
+    logoBounds.y = height / 2 - logoBounds.h * 2;
+
     pauseTexture = TextureLoader::loadTexture("assets/pause.png", renderer);
     pauseRect.w = 128;
     pauseRect.h = 128;
@@ -59,6 +78,7 @@ void Game::init(const char *title, int xPos, int yPos, int width, int height, bo
     pauseBlackScreenRect.w = width;
     pauseBlackScreenRect.h = height;
 
+    alienStart = FontUtils::loadFont("assets/CAlien.ttf", 22);
 }
 
 void Game::handleEvents(){
@@ -75,8 +95,32 @@ void Game::handleEvents(){
 void Game::update(){
     handleInput();
 
+    if(!hasStarted){
+
+        auto it = bullets.begin();
+        while (it != bullets.end()) {
+
+            (*it) ->setOffsets(0, 0);
+            (*it) -> update();
+
+            if ((*it) -> age > 100) { //ticks until bullet gets destroyed
+                it = bullets.erase(it);
+            } else
+                it++;
+        }
+
+        randomizeBullets();
+
+        particleSys -> update();
+        randomizeParticlesOnPause();
+    }
+
+    if(startBlackScreenOpacity > 0){
+        return;
+    }
+
     if(hasStarted){
-        if(!isPaused){
+        if(!isPaused && startBlackScreenOpacity <= 0){
             field -> update();
         }else{
             particleSys->update();
@@ -88,15 +132,20 @@ void Game::update(){
 void Game::render(){
     SDL_RenderClear(renderer);
 
+    field -> render();
+
     if(startBlackScreenOpacity > 0){
-        SDL_SetTextureAlphaMod(pauseBlackScreen, startBlackScreenOpacity);
-        SDL_RenderCopy(renderer, pauseBlackScreen, nullptr, &pauseBlackScreenRect);
-        if(SDL_GetTicks() % 2 == 0){
-            
+        SDL_SetTextureAlphaMod(bcgTexture, startBlackScreenOpacity);
+        SDL_RenderCopy(renderer, bcgTexture, nullptr, &pauseBlackScreenRect);
+        particleSys -> render();
+        for(auto b: bullets){
+            b -> render();
+        }
+        SDL_RenderCopy(renderer, logo, nullptr, &logoBounds);
+        if(SDL_GetTicks() % 4 == 2){
+            FontUtils::drawString(alienStart, renderer, {255, 255, 0}, "Press SPACE to Start", 240, 400);
         }
     }else{
-        field -> render();
-
         if(isPaused){
             particleSys->render();
             SDL_SetTextureAlphaMod(pauseBlackScreen, pauseBlackScreenOpacity);
@@ -108,6 +157,8 @@ void Game::render(){
             particleSys->getParticles().clear();
         }
     }
+
+
 
     SDL_RenderPresent(renderer);
 }
@@ -132,7 +183,7 @@ void Game::handleInput() {
     }
 
     if(hasStarted && startBlackScreenOpacity > 0){
-        startBlackScreenOpacity -= 6;
+        startBlackScreenOpacity -= 4;
         std::cout << startBlackScreenOpacity << std::endl;
     }
 
@@ -173,6 +224,29 @@ void Game::randomizeParticlesOnPause() {
         lastParticleY = y;
         particleSys->generate(count, x, y, 0, true);
     }
+}
+
+int lastBulletX;
+int lastBulletY;
+
+void Game::randomizeBullets() {
+    srand(time(nullptr));
+
+        int x = rand() % 600 + 100;
+        int y = rand() % 2 == 0 ? -20 : 650;
+        int direction = rand() % 2 == 0 ? 0 : 10;
+        int type = rand() % 4;
+
+    //@TODO: Make bullet spawning more precise here
+
+        if(x == lastBulletX || y == lastBulletY){
+            return;
+        }
+
+        lastBulletX = x;
+        lastBulletY = y;
+        bullets.push_back(new Bullet(renderer, x, y, direction, type));
+
 }
 
 
