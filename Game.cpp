@@ -28,8 +28,6 @@ ParticleSystem * particleSys;
 
 TTF_Font* alienStart;
 
-std::list<Bullet*> bullets;
-
 void Game::init(const char *title, int xPos, int yPos, int width, int height, bool isFullScreen){
     const int flags = 0;
 
@@ -96,21 +94,6 @@ void Game::update(){
     handleInput();
 
     if(!hasStarted){
-
-        auto it = bullets.begin();
-        while (it != bullets.end()) {
-
-            (*it) ->setOffsets(0, 0);
-            (*it) -> update();
-
-            if ((*it) -> age > 100) { //ticks until bullet gets destroyed
-                it = bullets.erase(it);
-            } else
-                it++;
-        }
-
-        randomizeBullets();
-
         particleSys -> update();
         randomizeParticlesOnPause();
     }
@@ -138,11 +121,9 @@ void Game::render(){
         SDL_SetTextureAlphaMod(bcgTexture, startBlackScreenOpacity);
         SDL_RenderCopy(renderer, bcgTexture, nullptr, &pauseBlackScreenRect);
         particleSys -> render();
-        for(auto b: bullets){
-            b -> render();
-        }
         SDL_RenderCopy(renderer, logo, nullptr, &logoBounds);
-        if(SDL_GetTicks() % 4 == 2){
+        //std::cout << SDL_GetTicks() << std::endl;
+        if(SDL_GetTicks() / 16 % 4 == 0){
             FontUtils::drawString(alienStart, renderer, {255, 255, 0}, "Press SPACE to Start", 240, 400);
         }
     }else{
@@ -225,29 +206,5 @@ void Game::randomizeParticlesOnPause() {
         particleSys->generate(count, x, y, 0, true);
     }
 }
-
-int lastBulletX;
-int lastBulletY;
-
-void Game::randomizeBullets() {
-    srand(time(nullptr));
-
-        int x = rand() % 600 + 100;
-        int y = rand() % 2 == 0 ? -20 : 650;
-        int direction = rand() % 2 == 0 ? 0 : 10;
-        int type = rand() % 4;
-
-    //@TODO: Make bullet spawning more precise here
-
-        if(x == lastBulletX || y == lastBulletY){
-            return;
-        }
-
-        lastBulletX = x;
-        lastBulletY = y;
-        bullets.push_back(new Bullet(renderer, x, y, direction, type));
-
-}
-
 
 
