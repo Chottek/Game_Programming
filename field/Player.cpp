@@ -33,6 +33,8 @@ Player::Player(SDL_Renderer* ren, float xPos, float yPos, float spd){
 
     bounds.w = 32; //61
     bounds.h = 32; //55
+
+    currentBulletType = 3;
 }
 
 void Player::update(){
@@ -160,7 +162,7 @@ void Player::move(){
 
 void Player::fire(){
     if(shootCoolDown >= defaultShootCoolDown){
-        bullets.push_back(new Bullet(renderer, (x - cameraOffsetX) + 14, y - cameraOffsetY + 14, angle));
+        bullets.push_back(new Bullet(renderer, (x - cameraOffsetX) + 14, y - cameraOffsetY + 14, angle, currentBulletType));
         shootCoolDown = 0;
     }
 }

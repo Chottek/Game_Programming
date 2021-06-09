@@ -1,0 +1,10 @@
+#ifndef GEOMETRICWARS_POWERUPS_H
+#define GEOMETRICWARS_POWERUPS_H
+
+
+class PowerUps {
+
+};
+
+
+#endif //GEOMETRICWARS_POWERUPS_H

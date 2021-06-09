@@ -3,24 +3,44 @@
 #include "../utils/TextureLoader.h"
 #include "../utils/MathUtils.h"
 
-SDL_Point center;
 
-Bullet::Bullet(SDL_Renderer* ren, float initialX, float initialY, double direction) {
+Bullet::Bullet(SDL_Renderer* ren, float initialX, float initialY, double direction, int type) {
     renderer = ren;
-    objTexture = TextureLoader::loadTexture("assets/bullet.png", renderer);
     x = initialX;
     y = initialY;
     angle = direction;
-    speed = 10;
-    damage = 7;
+
+    switch(type){
+        case 0:{
+            objTexture = TextureLoader::loadTexture("assets/bullets/bullet_1.png", renderer);
+            speed = 8;
+            damage = 5;
+            break;
+        }
+        case 1:{
+            objTexture = TextureLoader::loadTexture("assets/bullets/bullet_2.png", renderer);
+            speed = 10;
+            damage = 7;
+            break;
+        }
+        case 2:{
+            objTexture = TextureLoader::loadTexture("assets/bullets/bullet_3.png", renderer);
+            speed = 14;
+            damage = 2;
+            break;
+        }
+        case 3:{
+            objTexture = TextureLoader::loadTexture("assets/bullets/bullet_4.png", renderer);
+            speed = 10;
+            damage = 10;
+            break;
+        }
+    }
 
     rect.x = (int) x;
     rect.y = (int) y;
     rect.w = 10;
     rect.h = 5;
-
-//    center.x = rect.x + 32;
-//    center.y = rect.y + 32;
 
     age = 0;
 }
@@ -39,8 +59,6 @@ void Bullet::update() {
 }
 
 void Bullet::render() {
-    //const SDL_Point point = {(int) x + 4, (int) y + 4}; -> &point
-    //TODO: Figure a point to transform bullet properly around ship
     SDL_RenderCopyEx(renderer, objTexture, nullptr, &rect, MathUtils::toDegrees(angle), nullptr, SDL_FLIP_NONE);
 }
 

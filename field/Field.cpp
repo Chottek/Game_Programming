@@ -72,8 +72,13 @@ void Field::update() {
             } else plbullit++;
         }
 
-        //LIFE STATEMENT OF ENEMY
-        if((*it) -> getLife() <= 0){
+        if(SDL_HasIntersection(&(*it)->getBounds(), &player->getBounds())){
+            particleSystem->generate(14, (*it)->getX(), (*it)->getY(), 0, true);
+            particleSystem->generate((*it)->getLife() / 4, (player)->getX(), (player)->getY(), (*it)->getAngle(), false);
+            player->subLife(5);
+            it = enemies.erase(it);
+        }
+        else if((*it) -> getLife() <= 0){ //LIFE STATEMENT OF ENEMY
             particleSystem->generate(14, (*it)->getX(), (*it)->getY(), 0, true);
             player->addScore((*it) -> getBounty());
             it = enemies.erase(it);

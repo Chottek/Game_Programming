@@ -26,6 +26,10 @@ public:
     static SDL_Event event;
 
 private:
+
+    void handleInput();
+
+    bool isPaused = false;
     bool isRunning = false;
     SDL_Window *window;
     SDL_Renderer *renderer;

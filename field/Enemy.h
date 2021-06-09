@@ -56,6 +56,8 @@ public:
 
     void pushBack();
 
+    double getAngle() const;
+
 private:
     float x, y, speed;
     double angle, pushbackAngle;
@@ -70,6 +72,7 @@ private:
 
     int defaultShootCoolDown;
     int shootCoolDown;
+    int bulletType;
 
     float xOffset, yOffset;
 

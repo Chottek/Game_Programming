@@ -6,7 +6,7 @@
 class Bullet {
 
 public:
-    Bullet(SDL_Renderer* ren, float initialX, float initialY, double direction);
+    Bullet(SDL_Renderer* ren, float initialX, float initialY, double direction, int type);
     ~Bullet();
 
     void update();

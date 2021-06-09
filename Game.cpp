@@ -5,6 +5,9 @@
 Field* field;
 SDL_Event Game::event;
 
+bool wasPaused = false;
+int pauseClickCounter = 0;
+
 void Game::init(const char *title, int xPos, int yPos, int width, int height, bool isFullScreen){
     const int flags = 0;
 
@@ -44,7 +47,11 @@ void Game::handleEvents(){
 }
 
 void Game::update(){
-   field -> update();
+    handleInput();
+
+    if(!isPaused){
+        field -> update();
+    }
 }
 
 void Game::render(){
@@ -62,6 +69,25 @@ void Game::clean(){
     SDL_Quit();
     delete field;
     std::cout << "Game cleaned" << std::endl;
+}
+
+void Game::handleInput() {
+    const Uint8* key_state = SDL_GetKeyboardState(nullptr);
+
+    if(!wasPaused){
+        if(key_state[SDL_SCANCODE_ESCAPE]){
+            isPaused = !isPaused;
+            wasPaused = true;
+            pauseClickCounter = 0;
+        }
+    }
+
+    pauseClickCounter++;
+
+    if(pauseClickCounter > 10){
+        pauseClickCounter = 0;
+        wasPaused = false;
+    }
 }
 
 

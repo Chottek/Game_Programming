@@ -63,6 +63,7 @@ private:
     bool isAlive;
     int life;
     int score;
+    int currentBulletType;
 
     float x;
     float y;

@@ -24,6 +24,7 @@ Enemy::Enemy(SDL_Renderer *ren, float x, float y, int type) {
             bounty = life;
             bounds.w = 30;
             bounds.h = 27;
+            bulletType = 0;
             break;
         }
         case 1:{
@@ -34,6 +35,7 @@ Enemy::Enemy(SDL_Renderer *ren, float x, float y, int type) {
             bounty = life * 2;
             bounds.w = 32;
             bounds.h = 32;
+            bulletType = 1;
             break;
         }
         case 2:{
@@ -44,6 +46,7 @@ Enemy::Enemy(SDL_Renderer *ren, float x, float y, int type) {
             bounty = life * 3;
             bounds.w = 30;
             bounds.h = 30;
+            bulletType = 3;
             break;
         }
     }
@@ -121,7 +124,7 @@ void Enemy::fire() {
 
     if(shoot == 0){
         if(shootCoolDown >= defaultShootCoolDown){
-            bullets.push_back(new Bullet(renderer, (x + bounds.w / 2), (y + bounds.h / 2), angle));
+            bullets.push_back(new Bullet(renderer, (x + bounds.w / 2), (y + bounds.h / 2), angle, bulletType));
             shootCoolDown = 0;
         }
     }
@@ -157,6 +160,10 @@ void Enemy::pushBack() {
 
         pushback -= 0.5;
     }
+}
+
+double Enemy::getAngle() const {
+    return angle;
 }
 
 
