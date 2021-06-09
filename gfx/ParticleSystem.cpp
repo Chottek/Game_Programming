@@ -25,7 +25,7 @@ void ParticleSystem::update() {
     auto it = particles.begin();
     while (it != particles.end()) {
         (*it) -> update();
-        (*it) ->setOffsets(xOffset, yOffset);
+        (*it) -> setOffsets(xOffset, yOffset);
 
         if ((*it) -> getWidth() <= 0) {
             it = particles.erase(it);

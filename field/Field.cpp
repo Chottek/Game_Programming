@@ -64,6 +64,7 @@ void Field::update() {
         auto plbullit = (player->bullets.begin());
         while (plbullit != (player -> bullets.end())) {
             if (SDL_HasIntersection(&(*plbullit)->getRect(), &(*it)->getBounds()) == SDL_TRUE) {
+                std::cout << "enemyX:" << (*it) -> getX() << ", enemyY: " << (*it) -> getY() << std::endl;
                 particleSystem->generate(15, (*it)->getX(), (*it)->getY(), (*plbullit)->getAngle());
                 (*it) -> setPushBack((*plbullit) -> getDamage(), (*plbullit)->getAngle());
                 (*it) -> subLife((*plbullit)->getDamage());

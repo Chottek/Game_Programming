@@ -30,6 +30,9 @@ public:
 
     void updateBounds();
 
+    float getX() const;
+
+    float getY() const;
 
 
 private:

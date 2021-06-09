@@ -31,12 +31,14 @@ Particle::Particle(SDL_Renderer * ren, float initialX, float initialY, int shape
 
     }
 
-    Particle::bounds.x = (int) initialX;
-    Particle::bounds.y = (int) initialY;
+    x = initialX;
+    y = initialY;
+    Particle::bounds.x = (int) x;
+    Particle::bounds.y = (int) y;
     bounds.w = (int) size;
     bounds.h = (int) size;
 
-    life = 100; //ticks to death od particle;
+    life = 200; //ticks to death od particle;
 }
 
 
@@ -65,6 +67,8 @@ void Particle::move() {
     y += moveSpeed * sin(goingAngle);
 //@TODO: Make particle emitting start from X AND Y not somewhere else
 
+    std::cout << "PRTX: " << x << ", PRTY: " << y << ", OFFX: " << xOffset << ", OFFY: " << yOffset << std::endl;
+
     if(life <= 0){
         bounds.w -= 1;
         bounds.h -= 1;
@@ -75,4 +79,12 @@ void Particle::move() {
     }
 
     life--;
+}
+
+float Particle::getX() const {
+    return x;
+}
+
+float Particle::getY() const {
+    return y;
 }
