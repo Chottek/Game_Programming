@@ -14,21 +14,38 @@ Particle::Particle(SDL_Renderer * ren, float initialX, float initialY, int shape
 
     switch (shape) {
         case 0: {
-            texture = TextureLoader::loadTexture("assets/particles/tr_1.png", ren); //triangle
+            texture = TextureLoader::loadTexture("assets/particles/tr_1.png", ren);
             break;
         }
         case 1: {
-            texture = TextureLoader::loadTexture("assets/particles/tr_2.png", ren); //circle
+            texture = TextureLoader::loadTexture("assets/particles/tr_2.png", ren);
             break;
         }
         case 2: {
-            texture = TextureLoader::loadTexture("assets/particles/rect_1.png", ren); //rectangle
+            texture = TextureLoader::loadTexture("assets/particles/tr_3.png", ren);
             break;
         }
         case 3: {
-            texture = TextureLoader::loadTexture("assets/particles/rect_3.png", ren); //star
+            texture = TextureLoader::loadTexture("assets/particles/tr_4.png", ren);
             break;
         }
+        case 4: {
+            texture = TextureLoader::loadTexture("assets/particles/rect_1.png", ren);
+            break;
+        }
+        case 5: {
+            texture = TextureLoader::loadTexture("assets/particles/rect_2.png", ren);
+            break;
+        }
+        case 6: {
+            texture = TextureLoader::loadTexture("assets/particles/rect_3.png", ren);
+            break;
+        }
+        case 7: {
+            texture = TextureLoader::loadTexture("assets/particles/rect_4.png", ren);
+            break;
+        }
+
 
     }
 

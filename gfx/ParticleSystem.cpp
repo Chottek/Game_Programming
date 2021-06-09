@@ -9,7 +9,7 @@ ParticleSystem::ParticleSystem(SDL_Renderer *renderer) {
 void ParticleSystem::generate(int count, float x, float y, double angle, bool destroy) {
     srand(time(0)); //@TODO: Change seed, so it's more random
     for(int i = 0; i < count; i++){
-        int shape = rand() % 4;
+        int shape = rand() % 7;
         int size = destroy ? rand() % 16 + 8 : rand() % 6 + 2;
         int direction = rand() % 1;
         double rotateSpeed = MathUtils::fRand(0.1, 0.7);
@@ -39,4 +39,8 @@ void ParticleSystem::render() {
     for(auto p: particles){
         p -> render();
     }
+}
+
+std::list<Particle *> &ParticleSystem::getParticles(){
+    return particles;
 }

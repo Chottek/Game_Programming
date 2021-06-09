@@ -20,6 +20,8 @@ public:
         yOffset = yOff;
     }
 
+    std::list<Particle *> &getParticles();
+
 private:
     SDL_Renderer* renderer;
     std::list<Particle*> particles;

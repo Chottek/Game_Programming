@@ -1,12 +1,22 @@
 #include <sstream>
 #include "Game.h"
 #include "field/Field.h"
+#include "./utils/TextureLoader.h"
+#include "gfx/ParticleSystem.h"
 
 Field* field;
 SDL_Event Game::event;
 
+
 bool wasPaused = false;
 int pauseClickCounter = 0;
+SDL_Texture * pauseTexture;
+SDL_Texture * pauseBlackScreen;
+SDL_Rect pauseRect;
+SDL_Rect pauseBlackScreenRect;
+int pauseBlackScreenOpacity = 0;
+
+ParticleSystem * particleSys;
 
 void Game::init(const char *title, int xPos, int yPos, int width, int height, bool isFullScreen){
     const int flags = 0;
@@ -32,7 +42,22 @@ void Game::init(const char *title, int xPos, int yPos, int width, int height, bo
         isRunning = true;
     }
 
+    particleSys = new ParticleSystem(renderer);
+
     field = new Field(renderer);
+
+    pauseTexture = TextureLoader::loadTexture("assets/pause.png", renderer);
+    pauseRect.w = 128;
+    pauseRect.h = 128;
+    pauseRect.x = 800 / 2 - pauseRect.w / 2;
+    pauseRect.y = 600 / 2 - pauseRect.h / 2;
+
+    pauseBlackScreen = TextureLoader::loadTexture("assets/black_bcg.png", renderer);
+    pauseBlackScreenRect.x = 0;
+    pauseBlackScreenRect.y = 0;
+    pauseBlackScreenRect.w = width;
+    pauseBlackScreenRect.h = height;
+
 }
 
 void Game::handleEvents(){
@@ -51,6 +76,9 @@ void Game::update(){
 
     if(!isPaused){
         field -> update();
+    }else{
+        particleSys->update();
+        randomizeParticlesOnPause();
     }
 }
 
@@ -58,6 +86,18 @@ void Game::render(){
     SDL_RenderClear(renderer);
 
     field -> render();
+
+    if(isPaused){
+        particleSys->render();
+        SDL_SetTextureAlphaMod(pauseBlackScreen, pauseBlackScreenOpacity);
+        SDL_RenderCopy(renderer, pauseBlackScreen, nullptr, &pauseBlackScreenRect);
+        SDL_RenderCopy(renderer, pauseTexture, nullptr, &pauseRect);
+    }
+
+    if(!isPaused && !particleSys->getParticles().empty()){
+        particleSys->getParticles().clear();
+    }
+
 
     SDL_RenderPresent(renderer);
 }
@@ -79,14 +119,37 @@ void Game::handleInput() {
             isPaused = !isPaused;
             wasPaused = true;
             pauseClickCounter = 0;
+            pauseBlackScreenOpacity = 0;
         }
     }
 
     pauseClickCounter++;
+    pauseBlackScreenOpacity += 4;
 
     if(pauseClickCounter > 10){
         pauseClickCounter = 0;
         wasPaused = false;
+    }
+
+    if(pauseBlackScreenOpacity > 160){
+        pauseBlackScreenOpacity = 160;
+    }
+}
+
+int lastParticleX;
+int lastParticleY;
+
+void Game::randomizeParticlesOnPause() {
+    srand(time(nullptr));
+
+    int count = rand() % 15 + 8;
+    int x = rand() % 800;
+    int y = rand() % 600;
+
+    if(x != lastParticleX || y != lastParticleY){
+        lastParticleX = x;
+        lastParticleY = y;
+        particleSys->generate(count, x, y, 0, true);
     }
 }
 

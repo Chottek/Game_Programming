@@ -23,6 +23,8 @@ public:
 
     bool running(){ return isRunning; }
 
+    void randomizeParticlesOnPause();
+
     static SDL_Event event;
 
 private:

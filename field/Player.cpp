@@ -48,20 +48,14 @@ void Player::update(){
         (*it) ->setOffsets(0, 0);
         (*it) -> update();
 
-//        std::cout << "PX: " << x
-//        << ", PY: " << y << ", PXOFF: " << cameraOffsetX << ", PYOFF: " << cameraOffsetY
-//        << ", BX: " << (*it) -> getX() << ", BY: " << (*it) -> getY() << ", BXOFF: " << (*it) -> getXOffset()
-//        << ", BYOFF: " << (*it) -> getYOffset() << std::endl;
-
-
         if ((*it) -> age > bulletTicks) { //ticks until bullet gets destroyed
             it = bullets.erase(it);
         } else
             it++;
     }
 
-    bounds.x = (int) (x - cameraOffsetX);
-    bounds.y = (int) (y - cameraOffsetY);
+    bounds.x = (int) (x - cameraOffsetX) + bounds.w / 2;
+    bounds.y = (int) (y - cameraOffsetY) + bounds.h / 2;
 
     if(shootCoolDown < defaultShootCoolDown){
         shootCoolDown++;
@@ -162,7 +156,7 @@ void Player::move(){
 
 void Player::fire(){
     if(shootCoolDown >= defaultShootCoolDown){
-        bullets.push_back(new Bullet(renderer, (x - cameraOffsetX) + 14, y - cameraOffsetY + 14, angle, currentBulletType));
+        bullets.push_back(new Bullet(renderer, (x - cameraOffsetX) + bounds.w - 2, y - cameraOffsetY + bounds.h, angle, currentBulletType));
         shootCoolDown = 0;
     }
 }
