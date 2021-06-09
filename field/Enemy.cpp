@@ -114,9 +114,16 @@ void Enemy::updateAngle(float playerX, float playerY) {
 }
 
 void Enemy::fire() {
-    if(shootCoolDown >= defaultShootCoolDown){
-        bullets.push_back(new Bullet(renderer, x, y, angle));
-        shootCoolDown = 0;
+   // srand(time(nullptr));
+    int shoot = 0; //rand() % 10;
+
+    //std::cout << this << ":" << shoot << std::endl;
+
+    if(shoot == 0){
+        if(shootCoolDown >= defaultShootCoolDown){
+            bullets.push_back(new Bullet(renderer, (x + bounds.w / 2), (y + bounds.h / 2), angle));
+            shootCoolDown = 0;
+        }
     }
 
     shootCoolDown++;

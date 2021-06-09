@@ -7,7 +7,7 @@
 #include "../utils/TextureLoader.h"
 #include "../gfx/ParticleSystem.h"
 
-TTF_Font* alien10;
+TTF_Font* alien12;
 Camera* camera;
 Player* player;
 std::list<Enemy*> enemies;
@@ -24,7 +24,7 @@ Field::Field(SDL_Renderer* ren) {
     camera = new Camera();
     particleSystem = new ParticleSystem(renderer);
 
-    alien10 = FontUtils::loadFont("assets/CAlien.ttf", 10);
+    alien12 = FontUtils::loadFont("assets/CAlien.ttf", 12);
 
     bcgTexture = TextureLoader::loadTexture("assets/bcg.jpeg", renderer);
     bcgRect.x = 0;
@@ -88,5 +88,9 @@ void Field::render() {
     player->render();
     for (auto const& e : enemies) { e -> render(); }
     particleSystem -> render();
+
+    std::stringstream ss;
+    ss << "Enemies: " << enemies.size();
+    FontUtils::drawString(alien12, renderer, {255, 0, 0}, ss.str().c_str(), 685, 585);
 }
 

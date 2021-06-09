@@ -160,7 +160,7 @@ void Player::move(){
 
 void Player::fire(){
     if(shootCoolDown >= defaultShootCoolDown){
-        bullets.push_back(new Bullet(renderer, x - cameraOffsetX, y - cameraOffsetY, angle));
+        bullets.push_back(new Bullet(renderer, (x - cameraOffsetX) + 14, y - cameraOffsetY + 14, angle));
         shootCoolDown = 0;
     }
 }
