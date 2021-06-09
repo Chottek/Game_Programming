@@ -5,11 +5,13 @@
 #include "Enemy.h"
 #include "../utils/FontUtils.h"
 #include "../utils/TextureLoader.h"
+#include "../gfx/ParticleSystem.h"
 
 TTF_Font* alien10;
 Camera* camera;
 Player* player;
 std::list<Enemy*> enemies;
+ParticleSystem* particleSystem;
 
 Field::~Field(){
 
@@ -20,6 +22,7 @@ Field::Field(SDL_Renderer* ren) {
 
     player = new Player(renderer, 10.0F, 10.0F, 5.0F);
     camera = new Camera();
+    particleSystem = new ParticleSystem(renderer);
 
     alien10 = FontUtils::loadFont("assets/CAlien.ttf", 10);
 
@@ -38,6 +41,8 @@ void Field::update() {
     player -> update();
     camera -> center(player->getX(), player->getY(), player->getWidth(), player->getHeight());
     player -> setCameraOffsets(camera->getXOffset(), camera->getYOffset());
+    particleSystem -> update();
+    particleSystem -> setOffsets(camera -> getXOffset(), camera -> getYOffset());
 
     auto it = enemies.begin();
     while (it != enemies.end()) {
@@ -59,8 +64,9 @@ void Field::update() {
         auto plbullit = (player->bullets.begin());
         while (plbullit != (player -> bullets.end())) {
             if (SDL_HasIntersection(&(*plbullit)->getRect(), &(*it)->getBounds()) == SDL_TRUE) {
+                particleSystem->generate(15, (*it)->getX(), (*it)->getY(), (*plbullit)->getAngle());
                 (*it) -> setPushBack((*plbullit) -> getDamage(), (*plbullit)->getAngle());
-                (*it)->subLife((*plbullit)->getDamage());
+                (*it) -> subLife((*plbullit)->getDamage());
                 plbullit = (player-> bullets).erase(plbullit);
             } else plbullit++;
         }
@@ -78,7 +84,7 @@ void Field::render() {
     SDL_RenderCopy(renderer, bcgTexture, nullptr, &bcgRect); //drawing background
 
     player->render();
-
     for (auto const& e : enemies) { e -> render(); }
+    particleSystem -> render();
 }
 

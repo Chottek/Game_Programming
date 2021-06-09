@@ -1,5 +1,6 @@
 #include "Particle.h"
 #include "../utils/TextureLoader.h"
+#include "../utils/MathUtils.h"
 
 Particle::Particle(SDL_Renderer * ren, float initialX, float initialY, int shape,
                    float initialSize, int direction, double rotateSpeed, float moveSpeed, double goingAngle) {
@@ -34,12 +35,16 @@ Particle::Particle(SDL_Renderer * ren, float initialX, float initialY, int shape
     Particle::bounds.y = (int) initialY;
     bounds.w = (int) size;
     bounds.h = (int) size;
+
+    life = 100; //ticks to death od particle;
 }
 
 
 void Particle::update() {
     rotate();
     move();
+    updateBounds();
+    std::cout << this << ": " << life << std::endl;
 }
 
 void Particle::render() {
@@ -50,10 +55,24 @@ void Particle::rotate() {
     angle += (direction ? -rotateSpeed : rotateSpeed);
 }
 
+void Particle::updateBounds() {
+    bounds.x = (int) (x - xOffset);
+    bounds.y = (int) (y - yOffset);
+}
+
 void Particle::move() {
     x += moveSpeed * cos(goingAngle);
     y += moveSpeed * sin(goingAngle);
+//@TODO: Make particle emitting start from X AND Y not somewhere else
 
-    bounds.w -= 1;
-    bounds.h -= 1;
+    if(life <= 0){
+        bounds.w -= 1;
+        bounds.h -= 1;
+    }
+
+    if(moveSpeed > 0){
+        moveSpeed -= 0.1;
+    }
+
+    life--;
 }

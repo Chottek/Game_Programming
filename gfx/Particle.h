@@ -23,12 +23,23 @@ public:
         return bounds.h;
     }
 
+    void setOffsets(float xOff, float yOff){
+        xOffset = xOff;
+        yOffset = yOff;
+    }
+
+    void updateBounds();
+
+
+
 private:
     float x, y;
+    float xOffset, yOffset;
     float moveSpeed;
     float size;
     int direction;
     double rotateSpeed, angle, goingAngle;
+    int life;
     SDL_Renderer* renderer;
     SDL_Rect bounds;
     SDL_Texture* texture;

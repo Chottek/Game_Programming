@@ -7,7 +7,7 @@
 class ParticleSystem {
 
 public:
-    ParticleSystem(SDL_Renderer* renderer, int count);
+    ParticleSystem(SDL_Renderer* renderer);
     ~ParticleSystem();
 
     void update();
@@ -15,10 +15,16 @@ public:
 
     void generate(int count, float x, float y, double angle);
 
+    void setOffsets(float xOff, float yOff){
+        xOffset = xOff;
+        yOffset = yOff;
+    }
+
 private:
     SDL_Renderer* renderer;
     std::list<Particle*> particles;
 
+    float xOffset, yOffset;
 };
 
 
