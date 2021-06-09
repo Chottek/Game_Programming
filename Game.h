@@ -32,6 +32,7 @@ private:
     void handleInput();
 
     bool isPaused = false;
+    bool hasStarted = false;
     bool isRunning = false;
     SDL_Window *window;
     SDL_Renderer *renderer;

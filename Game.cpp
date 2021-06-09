@@ -15,6 +15,7 @@ SDL_Texture * pauseBlackScreen;
 SDL_Rect pauseRect;
 SDL_Rect pauseBlackScreenRect;
 int pauseBlackScreenOpacity = 0;
+int startBlackScreenOpacity = 255;
 
 ParticleSystem * particleSys;
 
@@ -74,30 +75,39 @@ void Game::handleEvents(){
 void Game::update(){
     handleInput();
 
-    if(!isPaused){
-        field -> update();
-    }else{
-        particleSys->update();
-        randomizeParticlesOnPause();
+    if(hasStarted){
+        if(!isPaused){
+            field -> update();
+        }else{
+            particleSys->update();
+            randomizeParticlesOnPause();
+        }
     }
 }
 
 void Game::render(){
     SDL_RenderClear(renderer);
 
-    field -> render();
-
-    if(isPaused){
-        particleSys->render();
-        SDL_SetTextureAlphaMod(pauseBlackScreen, pauseBlackScreenOpacity);
+    if(startBlackScreenOpacity > 0){
+        SDL_SetTextureAlphaMod(pauseBlackScreen, startBlackScreenOpacity);
         SDL_RenderCopy(renderer, pauseBlackScreen, nullptr, &pauseBlackScreenRect);
-        SDL_RenderCopy(renderer, pauseTexture, nullptr, &pauseRect);
-    }
+        if(SDL_GetTicks() % 2 == 0){
+            
+        }
+    }else{
+        field -> render();
 
-    if(!isPaused && !particleSys->getParticles().empty()){
-        particleSys->getParticles().clear();
-    }
+        if(isPaused){
+            particleSys->render();
+            SDL_SetTextureAlphaMod(pauseBlackScreen, pauseBlackScreenOpacity);
+            SDL_RenderCopy(renderer, pauseBlackScreen, nullptr, &pauseBlackScreenRect);
+            SDL_RenderCopy(renderer, pauseTexture, nullptr, &pauseRect);
+        }
 
+        if(!isPaused && !particleSys->getParticles().empty()){
+            particleSys->getParticles().clear();
+        }
+    }
 
     SDL_RenderPresent(renderer);
 }
@@ -113,6 +123,18 @@ void Game::clean(){
 
 void Game::handleInput() {
     const Uint8* key_state = SDL_GetKeyboardState(nullptr);
+
+    if(!hasStarted){
+        if(key_state[SDL_SCANCODE_SPACE]){
+            hasStarted = true;
+            startBlackScreenOpacity = 255;
+        }
+    }
+
+    if(hasStarted && startBlackScreenOpacity > 0){
+        startBlackScreenOpacity -= 6;
+        std::cout << startBlackScreenOpacity << std::endl;
+    }
 
     if(!wasPaused){
         if(key_state[SDL_SCANCODE_ESCAPE]){
