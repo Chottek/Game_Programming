@@ -32,7 +32,7 @@ Field::Field(SDL_Renderer* ren) {
     bcgRect.w = 800;
     bcgRect.h = 600;
 
-    enemies.push_back(new Enemy(renderer, 10, 10, 0));
+    enemies.push_back(new Enemy(renderer, 300, 10, 0));
     enemies.push_back(new Enemy(renderer, 500, 500, 1));
     enemies.push_back(new Enemy(renderer, 10, 500, 2));
 }
@@ -54,6 +54,7 @@ void Field::update() {
         auto bullit = ((*it) -> bullets.begin());
         while (bullit != ((*it) -> bullets.end())) {
             if (SDL_HasIntersection(&(*bullit)->getRect(), &player->getBounds()) == SDL_TRUE) {
+                particleSystem->generate((*bullit)->getDamage(), (player) -> getX(), player -> getY(), (*bullit)->getAngle(), false);
                 player -> setPushBack((*bullit)->getDamage(), (*bullit) -> getAngle());
                 player -> subLife((*bullit)->getDamage());
                 bullit = ((*it) -> bullets).erase(bullit);
@@ -64,8 +65,7 @@ void Field::update() {
         auto plbullit = (player->bullets.begin());
         while (plbullit != (player -> bullets.end())) {
             if (SDL_HasIntersection(&(*plbullit)->getRect(), &(*it)->getBounds()) == SDL_TRUE) {
-                std::cout << "enemyX:" << (*it) -> getX() << ", enemyY: " << (*it) -> getY() << std::endl;
-                particleSystem->generate(15, (*it)->getX(), (*it)->getY(), (*plbullit)->getAngle());
+                particleSystem->generate((*plbullit)->getDamage(), (*it)->getX(), (*it)->getY(), (*plbullit)->getAngle(), false);
                 (*it) -> setPushBack((*plbullit) -> getDamage(), (*plbullit)->getAngle());
                 (*it) -> subLife((*plbullit)->getDamage());
                 plbullit = (player-> bullets).erase(plbullit);
@@ -74,6 +74,7 @@ void Field::update() {
 
         //LIFE STATEMENT OF ENEMY
         if((*it) -> getLife() <= 0){
+            particleSystem->generate(14, (*it)->getX(), (*it)->getY(), 0, true);
             player->addScore((*it) -> getBounty());
             it = enemies.erase(it);
         }else it++;

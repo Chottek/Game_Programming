@@ -6,17 +6,18 @@ ParticleSystem::ParticleSystem(SDL_Renderer *renderer) {
     ParticleSystem::renderer = renderer;
 }
 
-void ParticleSystem::generate(int count, float x, float y, double angle) {
-    srand(time(nullptr));
+void ParticleSystem::generate(int count, float x, float y, double angle, bool destroy) {
+    srand(time(0)); //@TODO: Change seed, so it's more random
     for(int i = 0; i < count; i++){
         int shape = rand() % 4;
-        int size = rand() % 12 + 8;
+        int size = destroy ? rand() % 16 + 8 : rand() % 6 + 2;
         int direction = rand() % 1;
         double rotateSpeed = MathUtils::fRand(0.1, 0.7);
         double moveSpeed = MathUtils::fRand(2.0, 6.0);
+        double spreadAngle = destroy ? MathUtils::fRand(0, 6.2) : MathUtils::fRand(angle - 0.5, angle + 0.5);
 
         particles.push_back(new Particle(renderer, x, y, shape,
-                size, direction, rotateSpeed, moveSpeed, angle));
+                size, direction, rotateSpeed, moveSpeed, spreadAngle, destroy ? 200 : 100));
     }
 }
 

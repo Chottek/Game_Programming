@@ -7,7 +7,7 @@ class Particle {
 
 public:
     Particle(SDL_Renderer* renderer, float initialX, float initialY, int shape,
-             float size, int direction, double rotateSpeed, float moveSpeed, double goingAngle);
+             float size, int direction, double rotateSpeed, float moveSpeed, double goingAngle, int life);
     ~Particle();
 
     void update();

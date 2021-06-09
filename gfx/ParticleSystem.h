@@ -13,7 +13,7 @@ public:
     void update();
     void render();
 
-    void generate(int count, float x, float y, double angle);
+    void generate(int count, float x, float y, double angle, bool destroy);
 
     void setOffsets(float xOff, float yOff){
         xOffset = xOff;
