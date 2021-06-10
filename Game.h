@@ -30,7 +30,7 @@ public:
 private:
 
     void handleInput();
-    void randomizeBullets();
+    void blinkSpaceStart();
 
     bool isPaused = false;
     bool hasStarted = false;

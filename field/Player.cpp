@@ -65,6 +65,9 @@ void Player::update(){
 }
 
 void Player::render(){
+    if(!isAlive){
+        return;
+    }
 
     { //Drawing String with life
         std::stringstream ss;
@@ -206,5 +209,21 @@ void Player::pushBack() {
 
         pushback -= 0.5;
     }
+}
+
+double Player::getAngle() const {
+    return angle;
+}
+
+int Player::getLife() const {
+    return life;
+}
+
+bool Player::isAlive1() const {
+    return isAlive;
+}
+
+void Player::setIsAlive(bool isAlive) {
+    Player::isAlive = isAlive;
 }
 

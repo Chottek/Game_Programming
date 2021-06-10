@@ -1,4 +1,5 @@
 #include <ctime>
+#include <iostream>
 #include "PowerUpSystem.h"
 
 int powerUpMaxLife = 255;
@@ -9,10 +10,12 @@ PowerUpSystem::PowerUpSystem(SDL_Renderer *renderer) {
 
 
 void PowerUpSystem::update() {
+    generate();
+
     auto it = powerUps.begin();
     while (it != powerUps.end()) {
 
-       // (*it) ->setOffsets(0, 0);
+        (*it) -> setOffsets(xOffset, yOffset);
         (*it) -> update();
 
         if ((*it) -> getLife() <= 0) {
@@ -28,8 +31,16 @@ void PowerUpSystem::render(){
     }
 }
 
+int lastX, lastY;
+
 void PowerUpSystem::generate() {
     srand(time(nullptr));
+
+    int s = rand() % 5;
+
+    if(s != 3){
+        return;
+    }
 
     int type = rand() % 4;
     int side = rand() % 4;
@@ -44,10 +55,12 @@ void PowerUpSystem::generate() {
         case 1:{//down
             x = (rand() % 810 - 10);
             y = 620;
+            break;
         }
         case 2:{//left
             x = -20;
             y = (rand() % 600 - 10);
+            break;
         }
         case 3:{//right
             x = 820;
@@ -55,7 +68,15 @@ void PowerUpSystem::generate() {
         }
     }
 
-    powerUps.push_back(new PowerUp(renderer, x - xOffset, y - yOffset, type));
+    if(x == lastX || y == lastY){
+        return;
+    }
+
+    lastX = x;
+    lastY = y;
+    powerUps.push_back(new PowerUp(renderer, x, y, type));
+    std::cout << "Generated powerup of type " << type << " on x: " << x << " and y: " << y << " where offsets are: " << xOffset << ", " << yOffset << std::endl;
+
 }
 
 float PowerUpSystem::getXOffset() const {

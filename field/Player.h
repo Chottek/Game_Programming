@@ -52,6 +52,14 @@ public:
         Player::score += s;
     }
 
+    double getAngle() const;
+
+    int getLife() const;
+
+    bool isAlive1() const;
+
+    void setIsAlive(bool isAlive);
+
 private:
     void move();
 

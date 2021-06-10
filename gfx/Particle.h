@@ -34,7 +34,7 @@ public:
 
     float getY() const;
 
-
+    void setLife(int life);
 
 
 private:

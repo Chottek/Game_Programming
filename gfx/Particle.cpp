@@ -102,3 +102,7 @@ float Particle::getX() const {
 float Particle::getY() const {
     return y;
 }
+
+void Particle::setLife(int life) {
+    Particle::life = life;
+}

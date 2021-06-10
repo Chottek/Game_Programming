@@ -4,7 +4,6 @@
 #include "./utils/TextureLoader.h"
 #include "./utils/FontUtils.h"
 #include "gfx/ParticleSystem.h"
-#include "field/Bullet.h"
 
 Field* field;
 SDL_Event Game::event;
@@ -93,8 +92,11 @@ void Game::handleEvents(){
 void Game::update(){
     handleInput();
 
-    if(!hasStarted){
+    if(!hasStarted || startBlackScreenOpacity >= 0){
         particleSys -> update();
+    }
+
+    if(!hasStarted){
         randomizeParticlesOnPause();
     }
 
@@ -123,8 +125,8 @@ void Game::render(){
         particleSys -> render();
         SDL_RenderCopy(renderer, logo, nullptr, &logoBounds);
         //std::cout << SDL_GetTicks() << std::endl;
-        if(SDL_GetTicks() / 16 % 4 == 0){
-            FontUtils::drawString(alienStart, renderer, {255, 255, 0}, "Press SPACE to Start", 240, 400);
+        if(!hasStarted){
+            blinkSpaceStart();
         }
     }else{
         if(isPaused){
@@ -160,6 +162,9 @@ void Game::handleInput() {
         if(key_state[SDL_SCANCODE_SPACE]){
             hasStarted = true;
             startBlackScreenOpacity = 255;
+            for(auto p: particleSys->getParticles()){
+                p->setLife(-1);
+            }
         }
         if(key_state[SDL_SCANCODE_ESCAPE]){
             clean();
@@ -169,16 +174,27 @@ void Game::handleInput() {
 
     if(hasStarted && startBlackScreenOpacity > 0){
         startBlackScreenOpacity -= 4;
-        std::cout << startBlackScreenOpacity << std::endl;
     }
 
     if(!wasPaused){
-        if(key_state[SDL_SCANCODE_ESCAPE]){
-            isPaused = !isPaused;
-            wasPaused = true;
-            pauseClickCounter = 0;
-            pauseBlackScreenOpacity = 0;
+        if(field->getPlayerAlive()){
+            if(key_state[SDL_SCANCODE_ESCAPE]){
+                isPaused = !isPaused;
+                wasPaused = true;
+                pauseClickCounter = 0;
+                pauseBlackScreenOpacity = 0;
+            }
+        }else{
+            if(key_state[SDL_SCANCODE_SPACE]){
+                //retry <- reinit everything here
+                field = new Field(renderer);
+            }
+            if(key_state[SDL_SCANCODE_ESCAPE]){
+                clean();
+                exit(0);
+            }
         }
+
     }
 
     pauseClickCounter++;
@@ -208,6 +224,32 @@ void Game::randomizeParticlesOnPause() {
         lastParticleX = x;
         lastParticleY = y;
         particleSys->generate(count, x, y, 0, true);
+    }
+}
+
+int startVisibility = 255;
+bool direction = false;
+
+void Game::blinkSpaceStart() {
+    std::cout << startVisibility << std::endl;
+
+    FontUtils::drawString(alienStart, renderer, {255, 255, 0, (Uint8) startVisibility}, "Press SPACE to Start", 240, 400);
+    if(!direction && startVisibility >= 0){
+        startVisibility -= 7;
+    }
+
+    if(direction && startVisibility <= 255){
+        startVisibility += 7;
+    }
+
+    if(startVisibility <= 0 && !direction){
+        startVisibility = 0;
+        direction = true;
+    }
+
+    if(startVisibility >= 255 && direction){
+        startVisibility = 255;
+        direction = false;
     }
 }
 

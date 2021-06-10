@@ -43,6 +43,6 @@ void ParticleSystem::render() {
     }
 }
 
-std::list<Particle *> &ParticleSystem::getParticles(){
+std::list<Particle *> ParticleSystem::getParticles(){
     return particles;
 }

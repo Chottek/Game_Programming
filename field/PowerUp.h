@@ -3,6 +3,7 @@
 
 
 #include <SDL_render.h>
+#include "Player.h"
 
 class PowerUp {
 
@@ -19,11 +20,23 @@ public:
 
     int getLife() const;
 
+    void updateBounds();
+
+    void setOffsets(float offX, float offY){
+        xOffset = offX;
+        yOffset = offY;
+    }
+
+    float getX() const;
+
+    float getY() const;
+
 private:
     float x, y;
+    float xOffset, yOffset;
     int type;
     bool wasSeenByPlayer;
-    int life;
+    double life;
 
     SDL_Texture* texture;
     SDL_Rect bounds;

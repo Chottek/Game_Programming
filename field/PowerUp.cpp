@@ -6,18 +6,24 @@ PowerUp::PowerUp(SDL_Renderer *renderer, float x, float y, int type) {
     PowerUp::x = x;
     PowerUp::y = y;
     PowerUp::type = type;
+    PowerUp::wasSeenByPlayer = false;
 
     switch(type){
         case 0:{
-            texture = TextureLoader::loadTexture("/assets/powerups/life.png", renderer);
+            texture = TextureLoader::loadTexture("assets/powerups/health.png", renderer);
             break;
         }
         case 1:{
-            texture = TextureLoader::loadTexture("/assets/powerups/ammo.png", renderer);
+            texture = TextureLoader::loadTexture("assets/powerups/shield.png", renderer);
             break;
         }
         case 2:{
-            texture = TextureLoader::loadTexture("/assets/powerups/shield.png", renderer);
+            texture = TextureLoader::loadTexture("assets/particles/rect_3.png", renderer);
+            break;
+        }
+        default:{
+            PowerUp::type = 0;
+            texture = TextureLoader::loadTexture("assets/powerups/health.png", renderer);
             break;
         }
     }
@@ -29,8 +35,12 @@ PowerUp::PowerUp(SDL_Renderer *renderer, float x, float y, int type) {
 }
 
 void PowerUp::update() {
-    if(wasSeenByPlayer){
-        life--;
+    updateBounds();
+
+    life -= 0.5;
+
+    if(life <= 0){
+        life = 0;
     }
 }
 
@@ -46,5 +56,19 @@ const SDL_Rect &PowerUp::getBounds() const {
 int PowerUp::getLife() const {
     return life;
 }
+
+void PowerUp::updateBounds() {
+    bounds.x = (int) (x - xOffset);
+    bounds.y = (int) (y - yOffset);
+}
+
+float PowerUp::getX() const {
+    return x;
+}
+
+float PowerUp::getY() const {
+    return y;
+}
+
 
 

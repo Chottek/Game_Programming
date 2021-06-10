@@ -11,6 +11,8 @@ public:
     void update();
     void render();
 
+    bool getPlayerAlive();
+
 private:
     SDL_Renderer* renderer;
     SDL_Rect bcgRect;
