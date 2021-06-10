@@ -6,12 +6,14 @@
 #include "../utils/FontUtils.h"
 #include "../utils/TextureLoader.h"
 #include "../gfx/ParticleSystem.h"
+#include "PowerUpSystem.h"
 
 TTF_Font* alien12;
 Camera* camera;
 Player* player;
 std::list<Enemy*> enemies;
 ParticleSystem* particleSystem;
+PowerUpSystem* powerUpSystem;
 
 
 
@@ -25,6 +27,7 @@ Field::Field(SDL_Renderer* ren) {
     player = new Player(renderer, 10.0F, 10.0F, 5.0F);
     camera = new Camera();
     particleSystem = new ParticleSystem(renderer);
+    powerUpSystem = new PowerUpSystem(renderer);
 
     alien12 = FontUtils::loadFont("assets/CAlien.ttf", 12);
 
@@ -45,6 +48,7 @@ void Field::update() {
     player -> setCameraOffsets(camera->getXOffset(), camera->getYOffset());
     particleSystem -> update();
     particleSystem -> setOffsets(camera -> getXOffset(), camera -> getYOffset());
+    powerUpSystem -> update();
 
     auto it = enemies.begin();
     while (it != enemies.end()) {
@@ -77,7 +81,7 @@ void Field::update() {
         if(SDL_HasIntersection(&(*it)->getBounds(), &player->getBounds())){
             particleSystem->generate(14, (*it)->getX(), (*it)->getY(), 0, true);
             particleSystem->generate((*it)->getLife() / 4, (player)->getX(), (player)->getY(), (*it)->getAngle(), false);
-            player->subLife(5);
+            player->subLife((*it)->getLife());
             it = enemies.erase(it);
         }
         else if((*it) -> getLife() <= 0){ //LIFE STATEMENT OF ENEMY
@@ -95,6 +99,7 @@ void Field::render() {
     player->render();
     for (auto const& e : enemies) { e -> render(); }
     particleSystem -> render();
+    powerUpSystem -> render();
 
     std::stringstream ss;
     ss << "Enemies: " << enemies.size();

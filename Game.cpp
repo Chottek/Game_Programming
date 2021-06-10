@@ -161,6 +161,10 @@ void Game::handleInput() {
             hasStarted = true;
             startBlackScreenOpacity = 255;
         }
+        if(key_state[SDL_SCANCODE_ESCAPE]){
+            clean();
+            exit(0);
+        }
     }
 
     if(hasStarted && startBlackScreenOpacity > 0){
