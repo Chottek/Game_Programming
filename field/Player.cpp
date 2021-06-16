@@ -37,6 +37,19 @@ Player::Player(SDL_Renderer* ren, float xPos, float yPos, float spd){
     currentBulletType = 3;
 }
 
+bool Player::init() {
+    x = 0;
+    y = 0;
+    score = 0;
+    life = 100;
+    angle = 0.1;
+    fwd = back = left = right = false;
+    isAlive = true;
+
+    return true;
+}
+
+
 void Player::update(){
     getInput();
     move();
@@ -226,4 +239,5 @@ bool Player::isAlive1() const {
 void Player::setIsAlive(bool isAlive) {
     Player::isAlive = isAlive;
 }
+
 

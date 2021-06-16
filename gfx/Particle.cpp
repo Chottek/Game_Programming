@@ -49,12 +49,12 @@ Particle::Particle(SDL_Renderer * ren, float initialX, float initialY, int shape
 
     }
 
-    x = initialX;
-    y = initialY;
-    Particle::bounds.x = (int) x;
-    Particle::bounds.y = (int) y;
-    bounds.w = (int) size;
-    bounds.h = (int) size;
+    Particle::x = initialX;
+    Particle::y = initialY;
+    Particle::bounds.x = (int) x - 1000; //just for testing if it will spawn in different place not directly xD
+    Particle::bounds.y = (int) y - 1000;
+    Particle::bounds.w = (int) size;
+    Particle::bounds.h = (int) size;
 }
 
 
@@ -81,7 +81,6 @@ void Particle::updateBounds() {
 void Particle::move() {
     x += moveSpeed * cos(goingAngle);
     y += moveSpeed * sin(goingAngle);
-   // std::cout << "PRTX: " << x << ", PRTY: " << y << ", OFFX: " << xOffset << ", OFFY: " << yOffset << std::endl;
 
     if(life <= 0){
         bounds.w -= 1;

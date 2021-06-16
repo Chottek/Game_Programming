@@ -16,16 +16,22 @@ SDL_Texture * pauseBlackScreen;
 SDL_Rect pauseRect;
 SDL_Rect pauseBlackScreenRect;
 int pauseBlackScreenOpacity = 0;
-int startBlackScreenOpacity = 255;
 
+bool startShadingDirection = true;
 SDL_Texture * bcgTexture;
+SDL_Texture * startBlackScreen;
+SDL_Rect startBlackScreenRect;
+int startBlackScreenOpacity = 10;
 
 SDL_Texture * logo;
 SDL_Rect logoBounds;
+int logoOpacity = 255;
 
 ParticleSystem * particleSys;
 
 TTF_Font* alienStart;
+
+bool isFieldInited = false;
 
 void Game::init(const char *title, int xPos, int yPos, int width, int height, bool isFullScreen){
     const int flags = 0;
@@ -75,6 +81,12 @@ void Game::init(const char *title, int xPos, int yPos, int width, int height, bo
     pauseBlackScreenRect.w = width;
     pauseBlackScreenRect.h = height;
 
+    startBlackScreen = TextureLoader::loadTexture("assets/black_bcg.png", renderer);
+    startBlackScreenRect.x = 0;
+    startBlackScreenRect.y = 0;
+    startBlackScreenRect.w = width;
+    startBlackScreenRect.h = height;
+
     alienStart = FontUtils::loadFont("assets/CAlien.ttf", 22);
 }
 
@@ -92,7 +104,7 @@ void Game::handleEvents(){
 void Game::update(){
     handleInput();
 
-    if(!hasStarted || startBlackScreenOpacity >= 0){
+    if(!hasStarted || startBlackScreenOpacity <= 255){
         particleSys -> update();
     }
 
@@ -102,6 +114,10 @@ void Game::update(){
 
     if(startBlackScreenOpacity > 0){
         return;
+    }
+
+    if(!isFieldInited){
+        isFieldInited = field->init();
     }
 
     if(hasStarted){
@@ -120,11 +136,12 @@ void Game::render(){
     field -> render();
 
     if(startBlackScreenOpacity > 0){
-        SDL_SetTextureAlphaMod(bcgTexture, startBlackScreenOpacity);
         SDL_RenderCopy(renderer, bcgTexture, nullptr, &pauseBlackScreenRect);
+        SDL_SetTextureAlphaMod(startBlackScreen, startBlackScreenOpacity);
+        SDL_RenderCopy(renderer, startBlackScreen, nullptr, &startBlackScreenRect);
         particleSys -> render();
+        SDL_SetTextureAlphaMod(logo, logoOpacity);
         SDL_RenderCopy(renderer, logo, nullptr, &logoBounds);
-        //std::cout << SDL_GetTicks() << std::endl;
         if(!hasStarted){
             blinkSpaceStart();
         }
@@ -161,7 +178,8 @@ void Game::handleInput() {
     if(!hasStarted){
         if(key_state[SDL_SCANCODE_SPACE]){
             hasStarted = true;
-            startBlackScreenOpacity = 255;
+            startBlackScreenOpacity = 10;
+            startShadingDirection = true;
             for(auto p: particleSys->getParticles()){
                 p->setLife(-1);
             }
@@ -172,8 +190,20 @@ void Game::handleInput() {
         }
     }
 
-    if(hasStarted && startBlackScreenOpacity > 0){
+    if(hasStarted && logoOpacity >= 5){
+        logoOpacity -= 2;
+    }
+
+    if(hasStarted && startBlackScreenOpacity > 0 && !startShadingDirection){
         startBlackScreenOpacity -= 4;
+    }
+
+    if(hasStarted && startBlackScreenOpacity < 255 && startShadingDirection){
+        startBlackScreenOpacity += 4;
+    }
+
+    if(hasStarted && startBlackScreenOpacity >= 255){
+        startShadingDirection = false;
     }
 
     if(!wasPaused){
@@ -187,7 +217,7 @@ void Game::handleInput() {
         }else{
             if(key_state[SDL_SCANCODE_SPACE]){
                 //retry <- reinit everything here
-                field = new Field(renderer);
+                field->init();
             }
             if(key_state[SDL_SCANCODE_ESCAPE]){
                 clean();
@@ -227,28 +257,26 @@ void Game::randomizeParticlesOnPause() {
     }
 }
 
-int startVisibility = 255;
+int startVisibility = 245;
 bool direction = false;
 
 void Game::blinkSpaceStart() {
-    std::cout << startVisibility << std::endl;
-
     FontUtils::drawString(alienStart, renderer, {255, 255, 0, (Uint8) startVisibility}, "Press SPACE to Start", 240, 400);
-    if(!direction && startVisibility >= 0){
+    if(!direction && startVisibility >= 10){
         startVisibility -= 7;
     }
 
-    if(direction && startVisibility <= 255){
+    if(direction && startVisibility <= 245){
         startVisibility += 7;
     }
 
-    if(startVisibility <= 0 && !direction){
-        startVisibility = 0;
+    if(startVisibility <= 10 && !direction){
+        startVisibility = 10;
         direction = true;
     }
 
-    if(startVisibility >= 255 && direction){
-        startVisibility = 255;
+    if(startVisibility >= 245 && direction){
+        startVisibility = 245;
         direction = false;
     }
 }

@@ -10,6 +10,8 @@ public:
     Enemy(SDL_Renderer* ren, float x, float y, int type);
     ~Enemy();
 
+    bool init();
+
     void update();
     void render();
     void updatePosition();

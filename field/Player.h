@@ -60,6 +60,12 @@ public:
 
     void setIsAlive(bool isAlive);
 
+    bool init();
+
+    int getScore(){
+        return score;
+    }
+
 private:
     void move();
 

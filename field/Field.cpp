@@ -8,7 +8,7 @@
 #include "../gfx/ParticleSystem.h"
 #include "PowerUpSystem.h"
 
-TTF_Font* alien12;
+TTF_Font* alien12, * alien24;
 Camera* camera;
 Player* player;
 std::list<Enemy*> enemies;
@@ -25,12 +25,13 @@ Field::~Field(){
 Field::Field(SDL_Renderer* ren) {
     renderer = ren;
 
-    player = new Player(renderer, 10.0F, 10.0F, 5.0F);
+    player = new Player(renderer, 0.0F, 0.0F, 5.0F);
     camera = new Camera();
     particleSystem = new ParticleSystem(renderer);
     //powerUpSystem = new PowerUpSystem(renderer);
 
     alien12 = FontUtils::loadFont("assets/CAlien.ttf", 12);
+    alien24 = FontUtils::loadFont("assets/CAlien.ttf", 24);
 
     bcgTexture = TextureLoader::loadTexture("assets/bcg.jpeg", renderer);
     bcgRect.x = 0;
@@ -44,7 +45,24 @@ Field::Field(SDL_Renderer* ren) {
         enemies.push_back(new Enemy(renderer, 10 + i * 100, 500, 2));
     }
 
-    powerUp = new PowerUp(renderer, 200, 200, 0);
+  //  powerUp = new PowerUp(renderer, 200, 200, 0);
+}
+
+bool Field::init(){
+
+    enemies.clear();
+
+    for(int i = 0; i < 3; i++){
+        enemies.push_back(new Enemy(renderer, 300 + i * 100, 10, 0));
+        enemies.push_back(new Enemy(renderer, 500 + i * 100, 500, 1));
+        enemies.push_back(new Enemy(renderer, 10 + i * 100, 500, 2));
+    }
+
+    if(player->init()){
+        return true;
+    }
+
+    return false;
 }
 
 void Field::update() {
@@ -58,13 +76,6 @@ void Field::update() {
     particleSystem -> update();
     //powerUpSystem -> setOffsets(camera -> getXOffset(), camera -> getYOffset());
     //powerUpSystem -> update();
-    powerUp->setOffsets(camera -> getXOffset(), camera->getYOffset());
-    powerUp->update();
-
-    if(SDL_HasIntersection(&powerUp->getBounds(), &player->getBounds())){
-        particleSystem->generate(10, powerUp->getX(), powerUp->getY(), player->getAngle(), false);
-        player->addLife(50);
-    }
 
 //    auto pwit = powerUpSystem->getPowerUps().begin();
 //    while(pwit != powerUpSystem->getPowerUps().end()){
@@ -82,6 +93,14 @@ void Field::update() {
             (*it) -> updateAngle(player -> getX(), player->getY());
         }
 
+//        //ENEMY COLLISIONS WITH THEMSELVES ITERATOR
+//        for(auto e : enemies){
+//            if(SDL_HasIntersection(&e->getBounds(), &(*it)->getBounds()) && e != (*it)){
+//                e->setPushBack(3, -(*it)->getAngle());
+//                (*it)->setPushBack(3, e->getAngle());
+//            }
+//        }
+
         //ENEMY BULLETS ITERATOR
         auto bullit = ((*it) -> bullets.begin());
         while (bullit != ((*it) -> bullets.end())) {
@@ -90,11 +109,6 @@ void Field::update() {
                 player -> setPushBack((*bullit)->getDamage(), (*bullit) -> getAngle());
                 player -> subLife((*bullit)->getDamage());
                 bullit = ((*it) -> bullets).erase(bullit);
-
-                if(player->getLife() <= 0){
-                    particleSystem->generate(50, player->getX(), player->getY(), 0, true);
-                    player->setIsAlive(false);
-                }
             } else bullit++;
         }
 
@@ -123,6 +137,11 @@ void Field::update() {
         }else it++;
     }
 
+    if(player -> getLife() <= 0 && player->isAlive1()){
+        particleSystem->generate(50, player->getX(), player->getY(), 0, true);
+        player->setIsAlive(false);
+    }
+
 }
 
 void Field::render() {
@@ -132,11 +151,18 @@ void Field::render() {
     for (auto const& e : enemies) { e -> render(); }
     particleSystem -> render();
   //  powerUpSystem -> render();
-     powerUp->render();
 
     std::stringstream ss;
-    ss << "Enemies: " << enemies.size();
-    FontUtils::drawString(alien12, renderer, {255, 0, 0}, ss.str().c_str(), 685, 585);
+
+    if(player->isAlive1()){
+        ss << "Enemies: " << enemies.size();
+        FontUtils::drawString(alien12, renderer, {255, 0, 0}, ss.str().c_str(), 685, 585);
+    }else{
+        //draw "GAME OVER", score
+        ss << "Score: " << player->getScore();
+        FontUtils::drawString(alien24, renderer, {255, 0, 0}, ss.str().c_str(), 360, 400);
+    }
+
 }
 
 bool Field::getPlayerAlive() {

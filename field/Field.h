@@ -8,6 +8,9 @@ class Field {
 public:
     Field(SDL_Renderer* renderer);
     ~Field();
+
+    bool init();
+
     void update();
     void render();
 

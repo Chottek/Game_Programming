@@ -57,6 +57,45 @@ Enemy::Enemy(SDL_Renderer *ren, float x, float y, int type) {
     angle = 0.1;
 }
 
+bool Enemy::init() {
+    switch (type) {
+        case 0: {
+            life = 10;
+            speed = 2.8F;
+            defaultShootCoolDown = 50;
+            bounty = life;
+            bounds.w = 30;
+            bounds.h = 27;
+            bulletType = 0;
+            break;
+        }
+        case 1: {
+            life = 30;
+            speed = 2.0F;
+            defaultShootCoolDown = 70;
+            bounty = life * 2;
+            bounds.w = 32;
+            bounds.h = 32;
+            bulletType = 1;
+            break;
+        }
+        case 2: {
+            life = 40;
+            speed = 2.5F;
+            defaultShootCoolDown = 50;
+            bounty = life * 3;
+            bounds.w = 30;
+            bounds.h = 30;
+            bulletType = 3;
+            break;
+        }
+    }
+
+    angle = 0.1;
+
+    return true;
+}
+
 void Enemy::update() {
     updatePosition();
     pushBack();
@@ -117,8 +156,8 @@ void Enemy::updateAngle(float playerX, float playerY) {
 }
 
 void Enemy::fire() {
-   // srand(time(nullptr));
-    int shoot = 0; //rand() % 10;
+    srand(time(nullptr));
+    int shoot = rand() % 4;
 
     //std::cout << this << ":" << shoot << std::endl;
 
