@@ -17,6 +17,10 @@ SDL_Rect pauseRect;
 SDL_Rect pauseBlackScreenRect;
 int pauseBlackScreenOpacity = 0;
 
+SDL_Texture * endTexture;
+SDL_Rect endRect;
+int endScreenOpacity = 0;
+
 
 bool startShadingDirection = true;
 SDL_Texture * bcgTexture;
@@ -92,6 +96,13 @@ void Game::init(const char *title, int xPos, int yPos, int width, int height, bo
     pauseBlackScreenRect.w = width;
     pauseBlackScreenRect.h = height;
 
+    endTexture = TextureLoader::loadTexture("assets/black_bcg.png", renderer);
+    endRect.x = 0;
+    endRect.y = 0;
+    endRect.w = width;
+    endRect.h = height;
+    endScreenOpacity = 0;
+
     startBlackScreen = TextureLoader::loadTexture("assets/black_bcg.png", renderer);
     startBlackScreenRect.x = 0;
     startBlackScreenRect.y = 0;
@@ -120,6 +131,7 @@ void Game::update(){
     }
 
     if(!field->getPlayerAlive() && gameOverLogoOpacity < 255){
+        endScreenOpacity++;
         gameOverLogoOpacity++;
     }
 
@@ -151,6 +163,8 @@ void Game::render(){
     field -> render();
 
     if(!field->getPlayerAlive()){
+        SDL_SetTextureAlphaMod(endTexture, endScreenOpacity);
+        SDL_RenderCopy(renderer, endTexture, nullptr, &endRect);
         SDL_SetTextureAlphaMod(gameOverLogo, gameOverLogoOpacity);
         SDL_RenderCopy(renderer, gameOverLogo, nullptr, &gameOverLogoBounds);
         blinkSpaceStart(false);
@@ -178,8 +192,6 @@ void Game::render(){
             particleSys->getParticles().clear();
         }
     }
-
-
 
     SDL_RenderPresent(renderer);
 }
