@@ -62,9 +62,7 @@ public:
 
     bool init();
 
-    int getScore(){
-        return score;
-    }
+    int getScore(){return score;}
 
 private:
     void move();
@@ -72,6 +70,8 @@ private:
     void getInput();
 
     void fire();
+
+    void roundAngle();
 
     bool fwd, back, left, right, shooting;
     bool isAlive;

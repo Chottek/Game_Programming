@@ -2,6 +2,7 @@
 #include "../utils/MathUtils.h"
 #include "../utils/TextureLoader.h"
 
+
 int bulletTick; //Time before bullet dissapears
 
 Enemy::Enemy(SDL_Renderer *ren, float x, float y, int type) {
@@ -101,6 +102,7 @@ void Enemy::update() {
     pushBack();
     fire();
     move();
+    checkPush();
 
     auto it = bullets.begin();
     while (it != bullets.end()) {
@@ -156,10 +158,7 @@ void Enemy::updateAngle(float playerX, float playerY) {
 }
 
 void Enemy::fire() {
-    srand(time(nullptr));
-    int shoot = rand() % 4;
-
-    //std::cout << this << ":" << shoot << std::endl;
+    int shoot = MathUtils::randomize(0, 100);
 
     if(shoot == 0){
         if(shootCoolDown >= defaultShootCoolDown){
@@ -203,6 +202,20 @@ void Enemy::pushBack() {
 
 double Enemy::getAngle() const {
     return angle;
+}
+
+void Enemy::checkPush() {
+    if(!hasBeenPushed){
+        return;
+    }
+
+    if(pushTimer > 60){
+        pushTimer = 60;
+        hasBeenPushed = false;
+    }
+
+    pushTimer++;
+
 }
 
 

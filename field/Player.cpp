@@ -53,6 +53,7 @@ bool Player::init() {
 void Player::update(){
     getInput();
     move();
+  //  roundAngle();
     pushBack();
 
     auto it = bullets.begin();
@@ -238,6 +239,16 @@ bool Player::isAlive1() const {
 
 void Player::setIsAlive(bool isAlive) {
     Player::isAlive = isAlive;
+}
+
+void Player::roundAngle() {
+    if(angle < 0){
+        angle = MathUtils::toRadians(360);
+    }
+
+    if(angle > MathUtils::toRadians(360)){
+        angle = 0;
+    }
 }
 
 

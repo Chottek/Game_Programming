@@ -60,7 +60,13 @@ public:
 
     double getAngle() const;
 
+    bool hasBeenPushed = false;
+
+    int pushTimer = 60;
+
 private:
+    void checkPush();
+
     float x, y, speed;
     double angle, pushbackAngle;
     float pushback;

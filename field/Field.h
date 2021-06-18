@@ -17,6 +17,9 @@ public:
     bool getPlayerAlive();
 
 private:
+
+    void generateEnemy();
+
     SDL_Renderer* renderer;
     SDL_Rect bcgRect;
     SDL_Texture* bcgTexture;

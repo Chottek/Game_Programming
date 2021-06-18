@@ -5,7 +5,6 @@
 
 ParticleSystem::ParticleSystem(SDL_Renderer *renderer) {
     ParticleSystem::renderer = renderer;
-    std::cout << "Particle system initialized" << std::endl;
 }
 
 void ParticleSystem::generate(int count, float x, float y, double angle, bool destroy) {
