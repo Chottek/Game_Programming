@@ -106,7 +106,7 @@ void Field::update() {
             if (SDL_HasIntersection(&(*bullit)->getRect(), &player->getBounds()) == SDL_TRUE) {
                 particleSystem->generate((*bullit)->getDamage(), (player) -> getX(), player -> getY(), (*bullit)->getAngle(), false);
                 player -> setPushBack((*bullit)->getDamage(), (*bullit) -> getAngle());
-               // player -> subLife((*bullit)->getDamage());
+                player -> subLife((*bullit)->getDamage());
                 bullit = ((*it) -> bullets).erase(bullit);
             } else bullit++;
         }
@@ -160,7 +160,7 @@ void Field::render() {
     }else{
         //draw "GAME OVER", score
         ss << "Score: " << player->getScore();
-        FontUtils::drawString(alien24, renderer, {255, 0, 0}, ss.str().c_str(), 360, 400);
+        FontUtils::drawString(alien24, renderer, {255, 0, 0}, ss.str().c_str(), 340, 500);
     }
 
 }

@@ -17,6 +17,7 @@ SDL_Rect pauseRect;
 SDL_Rect pauseBlackScreenRect;
 int pauseBlackScreenOpacity = 0;
 
+
 bool startShadingDirection = true;
 SDL_Texture * bcgTexture;
 SDL_Texture * startBlackScreen;
@@ -26,6 +27,10 @@ int startBlackScreenOpacity = 10;
 SDL_Texture * logo;
 SDL_Rect logoBounds;
 int logoOpacity = 255;
+
+SDL_Texture* gameOverLogo;
+SDL_Rect gameOverLogoBounds;
+int gameOverLogoOpacity = 0;
 
 ParticleSystem * particleSys;
 
@@ -69,6 +74,12 @@ void Game::init(const char *title, int xPos, int yPos, int width, int height, bo
     logoBounds.x = width / 2 - (logoBounds.w / 2);
     logoBounds.y = height / 2 - logoBounds.h * 2;
 
+    gameOverLogo = TextureLoader::loadTexture("assets/gameover.png", renderer);
+    gameOverLogoBounds.w = 490;
+    gameOverLogoBounds.h = 50;
+    gameOverLogoBounds.x = width / 2 - (gameOverLogoBounds.w / 2);
+    gameOverLogoBounds.y = height / 2 - gameOverLogoBounds.h * 2;
+
     pauseTexture = TextureLoader::loadTexture("assets/pause.png", renderer);
     pauseRect.w = 128;
     pauseRect.h = 128;
@@ -108,6 +119,10 @@ void Game::update(){
         particleSys -> update();
     }
 
+    if(!field->getPlayerAlive() && gameOverLogoOpacity < 255){
+        gameOverLogoOpacity++;
+    }
+
     if(!hasStarted){
         randomizeParticlesOnPause();
     }
@@ -135,6 +150,12 @@ void Game::render(){
 
     field -> render();
 
+    if(!field->getPlayerAlive()){
+        SDL_SetTextureAlphaMod(gameOverLogo, gameOverLogoOpacity);
+        SDL_RenderCopy(renderer, gameOverLogo, nullptr, &gameOverLogoBounds);
+        blinkSpaceStart(false);
+    }
+
     if(startBlackScreenOpacity > 0){
         SDL_RenderCopy(renderer, bcgTexture, nullptr, &pauseBlackScreenRect);
         SDL_SetTextureAlphaMod(startBlackScreen, startBlackScreenOpacity);
@@ -143,7 +164,7 @@ void Game::render(){
         SDL_SetTextureAlphaMod(logo, logoOpacity);
         SDL_RenderCopy(renderer, logo, nullptr, &logoBounds);
         if(!hasStarted){
-            blinkSpaceStart();
+            blinkSpaceStart(true);
         }
     }else{
         if(isPaused){
@@ -260,8 +281,9 @@ void Game::randomizeParticlesOnPause() {
 int startVisibility = 245;
 bool direction = false;
 
-void Game::blinkSpaceStart() {
-    FontUtils::drawString(alienStart, renderer, {255, 255, 0, (Uint8) startVisibility}, "Press SPACE to Start", 240, 400);
+void Game::blinkSpaceStart(bool startOrRetry) {
+    const char* txt = startOrRetry ? "Press SPACE to Start" : "Press SPACE to Retry";
+    FontUtils::drawString(alienStart, renderer, {255, 255, 0, (Uint8) startVisibility}, txt, 240, 400);
     if(!direction && startVisibility >= 10){
         startVisibility -= 7;
     }

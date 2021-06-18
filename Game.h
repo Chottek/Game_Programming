@@ -30,7 +30,7 @@ public:
 private:
 
     void handleInput();
-    void blinkSpaceStart();
+    void blinkSpaceStart(bool startOrRetry);
 
     bool isPaused = false;
     bool hasStarted = false;
