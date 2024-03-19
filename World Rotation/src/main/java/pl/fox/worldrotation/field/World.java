@@ -6,6 +6,7 @@ import pl.fox.worldrotation.input.KeyManager;
 import java.awt.*;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Random;
 
 public class World {
 
@@ -20,11 +21,11 @@ public class World {
     public World(Handler handler) {
         player = new Player((float) handler.getGameWidth() / 2, (float) handler.getGameHeight() / 2, handler);
         for (int i = 0; i < 10; i++) {
-            objects.add(new CubeObject(handler, 10, 10 * 3 * i));
-            objects.add(new CubeObject(handler, 10 * i * 3, 10));
+            objects.add(new CubeObject(handler, 10, 10 * 3 * i, new Random().nextDouble()));
+            objects.add(new CubeObject(handler, 10 * i * 3, 10, new Random().nextDouble()));
 
-            objects.add(new CubeObject(handler, 40 + 20 * i, 400));
-            objects.add(new CubeObject(handler, 40 + 20 * i, 50 + 20 * i));
+            objects.add(new CubeObject(handler, 40 + 20 * i, 400, 0));
+            objects.add(new CubeObject(handler, 40 + 20 * i, 50 + 20 * i, 0));
         }
     }
 
@@ -37,14 +38,14 @@ public class World {
 
     public void render(Graphics2D g) {
         player.render(g);
-        objects.forEach(e -> e.render(g));
+        g.rotate(worldAngle, player.getX(), player.getY()); //Rotate the world in general, do not rotate player
+        objects.forEach(e -> e.render(g)); //Each object can have its own rotation now
     }
 
     private void checkCollision() {
-        //TODO: Find better way to detect and handle collision instead of just pushing the player back
         objects.forEach(object -> {
             if (object.getBounds().intersects(player.getBounds())) {
-                player.pushPlayerBack();
+                player.handleCollision();
             }
         });
     }

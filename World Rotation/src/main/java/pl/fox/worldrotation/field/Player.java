@@ -64,7 +64,7 @@ public class Player {
         }
     }
 
-    public void pushPlayerBack() {
+    public void handleCollision() {
         handler.setOffset(tempOffsetX, tempOffsetY);
     }
 
