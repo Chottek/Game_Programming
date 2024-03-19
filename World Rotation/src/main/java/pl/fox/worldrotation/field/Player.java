@@ -6,12 +6,16 @@ import pl.fox.worldrotation.input.KeyManager;
 import java.awt.*;
 
 public class Player {
+
     private final Handler handler;
 
     private float x, y;
     private float speed = 8.0f;
     private final float width = 20;
     private final float height = 20;
+
+    private float tempOffsetX;
+    private float tempOffsetY;
 
     public Player(float x, float y, Handler handler) {
         this.x = x;
@@ -43,6 +47,8 @@ public class Player {
 
     private void movePlayer() {
         var worldAngle = handler.getWorldRotation();
+        tempOffsetX = handler.getOffsetX();
+        tempOffsetY = handler.getOffsetY();
         if (KeyManager.arrup) {
             handler.moveOffsetBy(
                     (float) -(speed * Math.sin(worldAngle)),
@@ -59,20 +65,7 @@ public class Player {
     }
 
     public void pushPlayerBack() {
-        var worldAngle = handler.getWorldRotation();
-        if (KeyManager.arrup) {
-            handler.moveOffsetBy(
-                    (float) ((speed + 0.5) * Math.sin(worldAngle)),
-                    (float) ((speed + 0.5) * Math.cos(worldAngle))
-            );
-        }
-
-        if (KeyManager.arrdown) {
-            handler.moveOffsetBy(
-                    (float) -(speed * Math.sin(worldAngle)),
-                    (float) -(speed * Math.cos(worldAngle))
-            );
-        }
+        handler.setOffset(tempOffsetX, tempOffsetY);
     }
 
     public Rectangle getBounds() {

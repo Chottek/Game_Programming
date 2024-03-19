@@ -76,5 +76,13 @@ public class World {
     public float getOffsetY() {
         return offsetY;
     }
+
+    public void setOffsetX(float offsetX) {
+        this.offsetX = offsetX;
+    }
+
+    public void setOffsetY(float offsetY) {
+        this.offsetY = offsetY;
+    }
 }
 

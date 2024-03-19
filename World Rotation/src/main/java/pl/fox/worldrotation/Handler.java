@@ -31,6 +31,11 @@ public class Handler {
         return game.getWorld().getOffsetY();
     }
 
+    public void setOffset(float offsetX, float offsetY) {
+        game.getWorld().setOffsetX(offsetX);
+        game.getWorld().setOffsetY(offsetY);
+    }
+
     public int getGameWidth() {
         return game.getWidth();
     }
